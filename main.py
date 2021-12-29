@@ -8,6 +8,101 @@ tiles_group = pygame.sprite.Group()
 player_group = pygame.sprite.Group()
 player = None
 
+class Board:
+    # создание поля
+    def __init__(self, width, height):
+        self.width = width
+        self.height = height
+        self.board = []
+        for i in range(self.height):
+            self.board1 = []
+            for j in range(self.width):
+                self.board1.append([j, i, 0])
+            self.board.append(self.board1)
+        # значения по умолчанию
+        self.left = 10
+        self.top = 10
+        self.cell_size = 30
+
+    # настройка внешнего вида
+    def set_view(self, left, top, cell_size):
+        self.left = left
+        self.top = top
+        self.cell_size = cell_size
+
+    def get_cell(self, mouse_pos):
+        if mouse_pos[0] < self.left or mouse_pos[0] > 500 - self.left or mouse_pos[1] < self.top or mouse_pos[
+            1] > self.top + self.cell_size * self.height:
+            return None
+        else:
+            return ((mouse_pos[0] - self.left) // self.cell_size, (mouse_pos[1] - self.top) // self.cell_size)
+
+    def get_click(self, mouse_pos, screen):
+        cell = self.get_cell(mouse_pos)
+        print(cell)
+        if cell != None:
+            self.draw(cell[0], cell[1], screen)
+
+
+    def draw(self, x1, y1, screen):
+        screen.fill((0, 0, 0))
+        for el in self.board:
+            for el1 in el:
+                if el1[0] == x1 and el1[1] == y1:
+                    if el1[2] == 0:
+                        pygame.draw.rect(screen, (255, 0, 0), (
+                            el1[0] * self.cell_size + self.left, el1[1] * self.cell_size + self.top, self.cell_size,
+                            self.cell_size), 0)
+                        z = self.board.index(el)
+                        m = el.index(el1)
+                        self.board[z][m][2] += 1
+                    elif el1[2] == 1:
+                        pygame.draw.rect(screen, (0, 0, 255), (
+                            el1[0] * self.cell_size + self.left, el1[1] * self.cell_size + self.top, self.cell_size,
+                            self.cell_size), 0)
+                        pygame.draw.rect(screen, (255, 255, 255), (
+                            el1[0] * self.cell_size + self.left, el1[1] * self.cell_size + self.top, self.cell_size,
+                            self.cell_size), 1)
+                        z = self.board.index(el)
+                        m = el.index(el1)
+                        self.board[z][m][2] += 1
+                    elif el1[2] == 2:
+                        pygame.draw.rect(screen, (0, 0, 0), (
+                            el1[0] * self.cell_size + self.left, el1[1] * self.cell_size + self.top, self.cell_size,
+                            self.cell_size), 0)
+                        pygame.draw.rect(screen, (255, 255, 255), (
+                            el1[0] * self.cell_size + self.left, el1[1] * self.cell_size + self.top, self.cell_size,
+                            self.cell_size), 1)
+                        z = self.board.index(el)
+                        m = el.index(el1)
+                        self.board[z][m][2] = 0
+                else:
+                    if el1[2] == 0:
+                        pygame.draw.rect(screen, (255, 255, 255), (
+                            el1[0] * self.cell_size + self.left, el1[1] * self.cell_size + self.top, self.cell_size,
+                            self.cell_size), 1)
+
+                    elif el1[2] == 1:
+                        pygame.draw.rect(screen, (255, 0, 0), (
+                            el1[0] * self.cell_size + self.left, el1[1] * self.cell_size + self.top, self.cell_size,
+                            self.cell_size), 0)
+                        pygame.draw.rect(screen, (255, 255, 255), (
+                            el1[0] * self.cell_size + self.left, el1[1] * self.cell_size + self.top, self.cell_size,
+                            self.cell_size), 1)
+                    elif el1[2] == 2:
+                        pygame.draw.rect(screen, (0, 0, 255), (
+                            el1[0] * self.cell_size + self.left, el1[1] * self.cell_size + self.top, self.cell_size,
+                            self.cell_size), 0)
+                        pygame.draw.rect(screen, (255, 255, 255), (
+                            el1[0] * self.cell_size + self.left, el1[1] * self.cell_size + self.top, self.cell_size,
+                            self.cell_size), 1)
+
+    def render(self, screen):
+        for y in range(self.height):
+            for x in range(self.width):
+                pygame.draw.rect(screen, (255, 255, 255), (
+                x * self.cell_size + self.left, y * self.cell_size + self.top, self.cell_size, self.cell_size), 1)
+
 
 def load_image(name, colorkey=None):
     fullname = os.path.join('data', name)
@@ -66,8 +161,7 @@ class Player(pygame.sprite.Sprite):
 
 
 def terminate():
-    z = input()
-    fut(z)
+    fut()
 
 def generate_level(level):
     new_player, x, y = None, None, None
@@ -102,7 +196,7 @@ def start_screen():
                   "Правила игры",
                   "Если в правилах несколько строк,",
                   "приходится выводить их построчно"]
-    size = WIDTH, HEIGHT = 500, 500
+    size = WIDTH, HEIGHT = 1000, 500
 
     screen = pygame.display.set_mode(size)
     screen.fill((255, 255, 255))
@@ -130,14 +224,14 @@ def start_screen():
         pygame.display.flip()
         clock.tick(FPS)
 
-def fut(z):
+def fut():
     pygame.init()
     horizontal_borders = pygame.sprite.Group()
     vertical_borders = pygame.sprite.Group()
     pygame.init()
     size = 500, 500
     screen = pygame.display.set_mode(size)
-    player, level_x, level_y = generate_level(load_level(z))
+    player, level_x, level_y = generate_level(load_level('18.txt'))
     clock = pygame.time.Clock()
 
     running = True
@@ -145,6 +239,7 @@ def fut(z):
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 running = False
+                most()
             if event.type == pygame.KEYDOWN:
                 if event.key == pygame.K_LEFT:
                     player.update(4)
@@ -174,6 +269,27 @@ def fut(z):
         player_group.draw(screen)
         pygame.display.flip()
 
+
+def most():
+    pygame.init()
+    size = 500, 500
+    screen = pygame.display.set_mode(size)
+    pygame.display.set_caption('g')
+    board = Board(5, 7)
+    board.set_view(100, 100, 50)
+    screen.fill((0, 0, 0))
+    board.render(screen)
+    running = True
+    while running:
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                running = False
+            if event.type == pygame.MOUSEBUTTONDOWN:
+                screen.fill((0, 0, 0))
+                board.render(screen)
+                board.get_click(event.pos, screen)
+
+        pygame.display.flip()
     pygame.quit()
     sys.exit()
 
