@@ -42,10 +42,11 @@ class Board:
         print(cell)
         if cell != None:
             self.draw(cell[0], cell[1], screen)
+        else:
+            self.draw(1000, 1000, screen)
 
 
     def draw(self, x1, y1, screen):
-        screen.fill((0, 0, 0))
         for el in self.board:
             for el1 in el:
                 if el1[0] == x1 and el1[1] == y1:
@@ -275,9 +276,12 @@ def most():
     size = 500, 500
     screen = pygame.display.set_mode(size)
     pygame.display.set_caption('g')
-    board = Board(5, 7)
+    board = Board(1, 7)
     board.set_view(100, 100, 50)
+    board1 = Board(1, 7)
+    board1.set_view(200, 100, 50)
     screen.fill((0, 0, 0))
+    board1.render(screen)
     board.render(screen)
     running = True
     while running:
@@ -287,7 +291,9 @@ def most():
             if event.type == pygame.MOUSEBUTTONDOWN:
                 screen.fill((0, 0, 0))
                 board.render(screen)
+                board1.render(screen)
                 board.get_click(event.pos, screen)
+                board1.get_click(event.pos, screen)
 
         pygame.display.flip()
     pygame.quit()
