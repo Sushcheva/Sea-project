@@ -1,6 +1,14 @@
 import pygame
 import sys
 import os
+import sqlite3
+
+from PyQt5.QtWidgets import QApplication, QWidget, QPushButton, QComboBox, QMainWindow, QGridLayout, QWidget, \
+    QTableWidget, QTableWidgetItem, QCheckBox, QInputDialog, QTextBrowser, QLabel, QLineEdit
+from PyQt5.QtCore import QSize, Qt
+from PyQt5 import QtCore, QtWidgets, QtGui
+from PyQt5.QtGui import QPixmap
+from PyQt5 import uic
 
 pygame.init()
 pygame.key.set_repeat(200, 70)
