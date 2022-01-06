@@ -36,11 +36,12 @@ class AnimatedSprite(pygame.sprite.Sprite):
             self.rect = self.rect.move(20, 0)
         else:
             self.z += 0.25
-            if self.z >= 4:
-                self.image = self.frames[-1]
+            if self.z >= 2.5:
+                self.image = load_image('njump1.png')
+                self.image = pygame.transform.scale(self.image, (78 * 3, 197 * 3))
             else:
-                self.image = self.frames[-1]
-                self.image = pygame.transform.scale(self.image, (91*self.z, 198*self.z))
+                self.image = load_image('njump1.png')
+                self.image = pygame.transform.scale(self.image, (78*self.z, 197*self.z))
 
 
 
