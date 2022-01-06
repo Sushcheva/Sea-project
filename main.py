@@ -288,6 +288,7 @@ def most():
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 running = False
+                ninja()
             if event.type == pygame.MOUSEBUTTONDOWN:
                 screen.fill((0, 0, 0))
                 board.render(screen)
