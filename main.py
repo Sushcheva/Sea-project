@@ -65,9 +65,6 @@ class Player(pygame.sprite.Sprite):
             self.pos_x -= 1
 
 
-def terminate():
-    fut()
-
 def generate_level(level):
     new_player, x, y = None, None, None
     for y in range(len(level)):
