@@ -1,3 +1,15 @@
+import pygame
+import sys
+import os
+
+pygame.font.init()
+FPS = 50
+all_sprites = pygame.sprite.Group()
+tiles_group = pygame.sprite.Group()
+player_group = pygame.sprite.Group()
+player = None
+
+
 def ninja():
     pygame.init()
     horizontal_borders = pygame.sprite.Group()
@@ -13,7 +25,6 @@ def ninja():
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 running = False
-                most()
             if event.type == pygame.KEYDOWN:
                 if event.key == pygame.K_LEFT:
                     player.update(4)
