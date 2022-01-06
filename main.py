@@ -13,6 +13,7 @@ player = None
 class AnimatedSprite(pygame.sprite.Sprite):
     def __init__(self, sheet, columns, rows, x, y):
         super().__init__(all_sprites)
+        self.z = 1
         self.frames = []
         self.cut_sheet(sheet, columns, rows)
         self.cur_frame = 0
@@ -29,8 +30,18 @@ class AnimatedSprite(pygame.sprite.Sprite):
                     frame_location, self.rect.size)))
 
     def update(self):
-        self.cur_frame = (self.cur_frame + 1) % len(self.frames)
-        self.image = self.frames[self.cur_frame]
+        if self.cur_frame != len(self.frames) - 1:
+            self.cur_frame = (self.cur_frame + 1) % len(self.frames)
+            self.image = self.frames[self.cur_frame]
+            self.rect = self.rect.move(20, 0)
+        else:
+            self.z += 0.25
+            if self.z >= 4:
+                self.image = self.frames[-1]
+            else:
+                self.image = self.frames[-1]
+                self.image = pygame.transform.scale(self.image, (91*self.z, 198*self.z))
+
 
 
 def load_image(name, colorkey=None):
