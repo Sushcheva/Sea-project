@@ -7,6 +7,7 @@ FPS = 60
 all_sprites = pygame.sprite.Group()
 tiles_group = pygame.sprite.Group()
 player_group = pygame.sprite.Group()
+cloudsgroup = pygame.sprite.Group()
 player = None
 
 
@@ -62,6 +63,10 @@ tile_images = {
 player_image = load_image('mar.png', None)
 
 tile_width = tile_height = 50
+
+class CloudsText(pygame.sprite.Sprite):
+    def __init__(self, tile_type, pos_x, pos_y):
+        super().__init__(cloudsgroup, all_sprites)
 
 
 class Tile(pygame.sprite.Sprite):
@@ -130,7 +135,7 @@ def ninja():
     screen = pygame.display.set_mode(size)
     clock = pygame.time.Clock()
     fon = pygame.transform.scale(load_image('les.png'), (500, 500))
-    nindja = AnimatedSprite(load_image("njump.png"), 'njump1.png',9, 1, 50, 50)
+    nindja = AnimatedSprite(load_image("njump.png"), 'njump1.png', 9, 1, 50, 50)
     running = True
     while running:
         for event in pygame.event.get():
