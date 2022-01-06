@@ -116,15 +116,17 @@ def ninja():
     size = 500, 500
     screen = pygame.display.set_mode(size)
     clock = pygame.time.Clock()
-    nindja = AnimatedSprite(load_image("dragon_sheet8x2.png"), 8, 2, 50, 50)
+    screen.fill((0,0,0))
+    nindja = AnimatedSprite(load_image("njump.png"), 9, 1, 50, 50)
     running = True
     while running:
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 running = False
-
+        screen.fill((0,0,0))
         tiles_group.draw(screen)
-        all_sprites.update(event)
-
+        all_sprites.update()
+        clock.tick(4)
         all_sprites.draw(screen)
         pygame.display.flip()
+ninja()
