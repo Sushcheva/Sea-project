@@ -3,7 +3,7 @@ import sys
 import os
 
 pygame.font.init()
-FPS = 50
+FPS = 60
 all_sprites = pygame.sprite.Group()
 tiles_group = pygame.sprite.Group()
 player_group = pygame.sprite.Group()
@@ -11,8 +11,9 @@ player = None
 
 
 class AnimatedSprite(pygame.sprite.Sprite):
-    def __init__(self, sheet, columns, rows, x, y):
+    def __init__(self, sheet, image1, columns, rows, x, y):
         super().__init__(all_sprites)
+        self.image1 = image1
         self.z = 1
         self.frames = []
         self.cut_sheet(sheet, columns, rows)
@@ -35,12 +36,12 @@ class AnimatedSprite(pygame.sprite.Sprite):
             self.image = self.frames[self.cur_frame]
             self.rect = self.rect.move(20, 0)
         else:
-            self.z += 0.25
+            self.z += 0.35
             if self.z >= 2.5:
-                self.image = load_image('njump1.png')
+                self.image = load_image(self.image1)
                 self.image = pygame.transform.scale(self.image, (78 * 3, 197 * 3))
             else:
-                self.image = load_image('njump1.png')
+                self.image = load_image(self.image1)
                 self.image = pygame.transform.scale(self.image, (78*self.z, 197*self.z))
 
 
@@ -129,16 +130,16 @@ def ninja():
     screen = pygame.display.set_mode(size)
     clock = pygame.time.Clock()
     screen.fill((0,0,0))
-    nindja = AnimatedSprite(load_image("njump.png"), 9, 1, 50, 50)
+    nindja = AnimatedSprite(load_image("njump.png"), 'njump1.png', 9, 1, 50, 50)
     running = True
     while running:
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 running = False
-        screen.fill((0,0,0))
+        screen.fill((0, 0, 0))
         tiles_group.draw(screen)
         all_sprites.update()
-        clock.tick(4)
+        clock.tick(10)
         all_sprites.draw(screen)
         pygame.display.flip()
 ninja()
