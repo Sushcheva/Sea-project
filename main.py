@@ -32,19 +32,28 @@ class AnimatedSprite(pygame.sprite.Sprite):
                     frame_location, self.rect.size)))
 
     def update(self):
+        self.cur_frame = (self.cur_frame + 1) % len(self.frames)
+        self.image = self.frames[self.cur_frame]
+
+
+class Heroes(AnimatedSprite):
+    def __init__(self, sheet, image1, columns, rows, x, y):
+        super().__init__(sheet, image1, columns, rows, x, y)
+
+
+    def update(self):
         if self.cur_frame != len(self.frames) - 1:
             self.cur_frame = (self.cur_frame + 1) % len(self.frames)
             self.image = self.frames[self.cur_frame]
             self.rect = self.rect.move(20, 0)
         else:
-            self.z += 0.35
+            self.z += 0.2
             if self.z >= 2.5:
                 self.image = load_image(self.image1)
                 self.image = pygame.transform.scale(self.image, (78 * 3, 197 * 3))
             else:
                 self.image = load_image(self.image1)
                 self.image = pygame.transform.scale(self.image, (78*self.z, 197*self.z))
-
 
 
 def load_image(name, colorkey=None):
@@ -135,16 +144,16 @@ def ninja():
     screen = pygame.display.set_mode(size)
     clock = pygame.time.Clock()
     fon = pygame.transform.scale(load_image('les.png'), (500, 500))
-    nindja = AnimatedSprite(load_image("njump.png"), 'njump1.png', 9, 1, 50, 50)
+    nindja = Heroes(load_image("njump.png"), 'njump1.png', 9, 1, 50, 50)
     running = True
     while running:
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 running = False
         tiles_group.draw(screen)
-        screen.blit(fon,(0,0))
+        screen.blit(fon, (0,0))
         all_sprites.update()
-        clock.tick(10)
+        clock.tick(8)
         all_sprites.draw(screen)
         pygame.display.flip()
 ninja()
