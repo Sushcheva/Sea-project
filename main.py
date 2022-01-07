@@ -1,13 +1,13 @@
 import pygame
 import sys
 import os
+from random import sample, randrange, choices
 
 pygame.font.init()
 FPS = 60
 all_sprites = pygame.sprite.Group()
-tiles_group = pygame.sprite.Group()
-player_group = pygame.sprite.Group()
-cloudsgroup = pygame.sprite.Group()
+fruit_group = pygame.sprite.Group()
+person_group = pygame.sprite.Group()
 player = None
 
 
@@ -76,7 +76,7 @@ tile_width = tile_height = 50
 
 class CloudsText(pygame.sprite.Sprite):
     def __init__(self, hero, number):
-        super().__init__(player_group, all_sprites)
+        super().__init__(person_group, all_sprites)
         self.hero = player_image
         self.number = number
         self.image = load_image('cloud.jpg', None)
@@ -85,70 +85,28 @@ class CloudsText(pygame.sprite.Sprite):
         self.mask = pygame.mask.from_surface(self.image)
 
     def update(self):
+        pass
 
 
-class Tile(pygame.sprite.Sprite):
-    def __init__(self, tile_type, pos_x, pos_y):
-        super().__init__(tiles_group, all_sprites)
-        self.image = tile_images[tile_type]
+class Fruit(pygame.sprite.Sprite):
+    def __init__(self, image, pos_x, time, image1):
+        super().__init__(fruit_group, all_sprites)
+        self.image1 = image1
+        self.time = time
+        self.v0 = randrange(1, 10)
+        self.image = pygame.transform.scale(load_image(image, None), (50, 50))
         self.rect = self.image.get_rect().move(
-            tile_width * pos_x, tile_height * pos_y)
-        self.tile_type = tile_type
-        self.pos_x = pos_x
-        self.pos_y = pos_y
-        print(tile_type)
-
-
-class Player(pygame.sprite.Sprite):
-    def __init__(self, pos_x, pos_y):
-        super().__init__(player_group, all_sprites)
-        self.image = player_image
-        self.pos_x = pos_x
-        self.pos_y = pos_y
-        self.rect = self.image.get_rect().move(
-            tile_width * pos_x + 15, tile_height * pos_y + 5)
+            pos_x, 500)
         self.mask = pygame.mask.from_surface(self.image)
 
-    def update(self, event):
-        if event == 1:
-            self.rect = self.rect.move(0, 50)
-            self.pos_y += 1
-        if event == 2:
-            self.rect = self.rect.move(0, -50)
-            self.pos_y -= 1
-        if event == 3:
-            self.rect = self.rect.move(50, 0)
-            self.pos_x += 1
-        if event == 4:
-            self.rect = self.rect.move(-50, 0)
-            self.pos_x -= 1
-
-
-def generate_level(level):
-    new_player, x, y = None, None, None
-    for y in range(len(level)):
-        for x in range(len(level[y])):
-            if level[y][x] == '.':
-                Tile('empty', x, y)
-            elif level[y][x] == '#':
-                Tile('wall', x, y)
-            elif level[y][x] == '@':
-                Tile('empty', x, y)
-                new_player = Player(x, y)
-
-    return new_player, x, y
-
-
-def load_level(filename):
-    filename = filename
-    with open('18.txt', 'r') as mapFile:
-        level_map = [line.strip() for line in mapFile]
-    max_width = max(map(len, level_map))
-    return list(map(lambda x: x.ljust(max_width, '.'), level_map))
+    def update(self, t):
+        if self.time >= t:
+            self.rect = self.image.get_rect().move(
+                0, -self.v0 + 0.1)
+            self.v0-= 0.1
 
 
 def ninja():
-    pygame.init()
     pygame.init()
     size = 500, 500
     screen = pygame.display.set_mode(size)
@@ -160,11 +118,36 @@ def ninja():
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 running = False
-        tiles_group.draw(screen)
+            if event.type == pygame.MOUSEBUTTONDOWN:
+                running = False
         screen.blit(fon, (0, 0))
         all_sprites.update()
         clock.tick(8)
         all_sprites.draw(screen)
+        pygame.display.flip()
+    running = True
+    z = ['apple.png', 'apple.png', 'apple.png', 'mango.png', 'mango.png', 'banana.png', 'banana.png', 'coconut.jpg',
+         'coconut.jpg','granat.png', 'pear.png', 'pineapple.png', 'pineapple.png', 'pineapple.png', 'strawberry.png',
+         'strawberry.png', 'strawberry.png', 'bomb.png', 'bomb.png', 'bomb.png']
+    t = 0
+    z1 = sample(z, 20)
+    g = 0
+    z2 = []
+    for i in range(20):
+        z2.append(randrange(50, 750, 10))
+    for el in z1:
+        Fruit(el, randrange(10, 450), z2[g], el)
+        g += 1
+
+    while running:
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                running = False
+        t += 50
+        screen.blit(fon, (0, 0))
+        fruit_group.update(t)
+        clock.tick(50)
+        fruit_group.draw(screen)
         pygame.display.flip()
 
 
