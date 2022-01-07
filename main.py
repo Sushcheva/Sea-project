@@ -93,17 +93,19 @@ class Fruit(pygame.sprite.Sprite):
         super().__init__(fruit_group, all_sprites)
         self.image1 = image1
         self.time = time
-        self.v0 = randrange(1, 10)
-        self.image = pygame.transform.scale(load_image(image, None), (50, 50))
+        self.v0 = randrange(80, 100)
+        self.image = pygame.transform.scale(load_image(image, None), (100, 100))
         self.rect = self.image.get_rect().move(
-            pos_x, 500)
+            pos_x,500)
         self.mask = pygame.mask.from_surface(self.image)
+        self.pos_x = pos_x
 
     def update(self, t):
-        if self.time >= t:
+        if self.time <= t:
             self.rect = self.image.get_rect().move(
-                0, -self.v0 + 0.1)
-            self.v0-= 0.1
+                self.pos_x, 500 - self.v0*t/100 + 0.15*(t/100)**2)
+            self.v0 -= 0.15
+
 
 
 def ninja():
@@ -134,19 +136,20 @@ def ninja():
     g = 0
     z2 = []
     for i in range(20):
-        z2.append(randrange(50, 750, 10))
+        z2.append(randrange(100, 1500))
     for el in z1:
-        Fruit(el, randrange(10, 450), z2[g], el)
+        Fruit(el, randrange(0, 400), z2[g], el)
         g += 1
 
     while running:
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 running = False
-        t += 50
+        t += 1
         screen.blit(fon, (0, 0))
-        fruit_group.update(t)
-        clock.tick(50)
+        clock.tick(100)
+        for el in fruit_group:
+            el.update(t)
         fruit_group.draw(screen)
         pygame.display.flip()
 
