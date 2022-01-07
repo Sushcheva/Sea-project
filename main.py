@@ -40,7 +40,6 @@ class Heroes(AnimatedSprite):
     def __init__(self, sheet, image1, columns, rows, x, y):
         super().__init__(sheet, image1, columns, rows, x, y)
 
-
     def update(self):
         if self.cur_frame != len(self.frames) - 1:
             self.cur_frame = (self.cur_frame + 1) % len(self.frames)
@@ -53,7 +52,7 @@ class Heroes(AnimatedSprite):
                 self.image = pygame.transform.scale(self.image, (78 * 3, 197 * 3))
             else:
                 self.image = load_image(self.image1)
-                self.image = pygame.transform.scale(self.image, (78*self.z, 197*self.z))
+                self.image = pygame.transform.scale(self.image, (78 * self.z, 197 * self.z))
 
 
 def load_image(name, colorkey=None):
@@ -65,6 +64,7 @@ def load_image(name, colorkey=None):
     image = pygame.image.load(fullname)
     return image
 
+
 tile_images = {
     'wall': load_image('box.png', None),
     'empty': load_image('grass.png', None)
@@ -73,9 +73,18 @@ player_image = load_image('mar.png', None)
 
 tile_width = tile_height = 50
 
+
 class CloudsText(pygame.sprite.Sprite):
-    def __init__(self, tile_type, pos_x, pos_y):
-        super().__init__(cloudsgroup, all_sprites)
+    def __init__(self, hero, number):
+        super().__init__(player_group, all_sprites)
+        self.hero = player_image
+        self.number = number
+        self.image = load_image('cloud.jpg', None)
+        self.rect = self.image.get_rect().move(
+            400, 400)
+        self.mask = pygame.mask.from_surface(self.image)
+
+    def update(self):
 
 
 class Tile(pygame.sprite.Sprite):
@@ -137,6 +146,7 @@ def load_level(filename):
     max_width = max(map(len, level_map))
     return list(map(lambda x: x.ljust(max_width, '.'), level_map))
 
+
 def ninja():
     pygame.init()
     pygame.init()
@@ -151,9 +161,11 @@ def ninja():
             if event.type == pygame.QUIT:
                 running = False
         tiles_group.draw(screen)
-        screen.blit(fon, (0,0))
+        screen.blit(fon, (0, 0))
         all_sprites.update()
         clock.tick(8)
         all_sprites.draw(screen)
         pygame.display.flip()
+
+
 ninja()
