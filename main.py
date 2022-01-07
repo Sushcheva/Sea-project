@@ -93,19 +93,35 @@ class Fruit(pygame.sprite.Sprite):
         super().__init__(fruit_group, all_sprites)
         self.image1 = image1
         self.time = time
-        self.v0 = randrange(80, 100)
+        self.v0 = randrange(-550, -300)
+        self.v1 =abs(self.v0)
         self.image = pygame.transform.scale(load_image(image, None), (100, 100))
         self.rect = self.image.get_rect().move(
-            pos_x,500)
+            pos_x, 500)
         self.mask = pygame.mask.from_surface(self.image)
         self.pos_x = pos_x
+        self.x0 = 500
+        self.z = 0
 
     def update(self, t):
         if self.time <= t:
-            self.rect = self.image.get_rect().move(
-                self.pos_x, 500 - self.v0*t/100 + 0.15*(t/100)**2)
-            self.v0 -= 0.15
+            t1 = t/100-self.time/100
+            if self.v0 < 0:
+                self.rect = self.image.get_rect().move(
+                    self.pos_x, self.x0 + self.v0 * t1 + 0.6 * (t1 ** 2))
+                self.v0 += 1.2
+                self.z = self.x0 + self.v0 * t1 + 0.6 * (t1 ** 2)
+            else:
+                self.rect = self.image.get_rect().move(
+                    self.pos_x, self.x0 - self.v0 * t1 + 0.6 * (t1 ** 2))
+                self.v0 -= 1.2
+                self.z = self.x0 - self.v0 * t1 + 0.6 * (t1 ** 2)
 
+        elif self.z > 500 or self.v0 == self.v1:
+            self.image = pygame.transform.scale(load_image('w.png', None), (100, 100))
+            self.rect = self.image.get_rect().move(
+                self.pos_x, 600)
+            self.mask = pygame.mask.from_surface(self.image)
 
 
 def ninja():
@@ -129,7 +145,7 @@ def ninja():
         pygame.display.flip()
     running = True
     z = ['apple.png', 'apple.png', 'apple.png', 'mango.png', 'mango.png', 'banana.png', 'banana.png', 'coconut.jpg',
-         'coconut.jpg','granat.png', 'pear.png', 'pineapple.png', 'pineapple.png', 'pineapple.png', 'strawberry.png',
+         'coconut.jpg', 'granat.png', 'pear.png', 'pineapple.png', 'pineapple.png', 'pineapple.png', 'strawberry.png',
          'strawberry.png', 'strawberry.png', 'bomb.png', 'bomb.png', 'bomb.png']
     t = 0
     z1 = sample(z, 20)
