@@ -45,6 +45,17 @@ def load_image(name, color_key=None):
     return image
 
 
+pygame.init()
+size = 500, 500
+screen = pygame.display.set_mode(size)
+clock = pygame.time.Clock()
+fon = pygame.transform.scale(load_image('game_over.png'), (500, 500))
+def over_game():
+    running = True
+
+
+
+
 def load_level(filename):
     filename = "data1/" + filename
     # читаем уровень, убирая символы перевода строки
@@ -68,6 +79,8 @@ def generate_level(level):
                 Tile('wall', x, y)
             elif level[y][x] == '@':
                 Tile('empty', x, y)
+            elif level[y][x] == '!':
+                Tile('enemy', x, y)
                 new_player = Player(x, y)
     # вернем игрока, а также размер поля в клетках
     return new_player, x, y
@@ -143,6 +156,8 @@ class Player(pygame.sprite.Sprite):
         if event == 4:
             self.rect = self.rect.move(-50, 0)
             self.pos_x -= 1
+        if event == 5:
+            open.over_game()
 
 
 o = ['map', 'map2', 'map3']
@@ -201,16 +216,7 @@ class AnimatedSprite(pygame.sprite.Sprite):
 
 dragon = AnimatedSprite(load_image("dragon.png"), 8, 2, 50, 50)
 
-running = True
-while running:
-    for event in pygame.event.get():
-        if event.type == pygame.QUIT:
-            running = False
-        if event.type == pygame.MOUSEBUTTONDOWN:
-            running = False
-    clock.tick(8)
-    all_sprites.draw(screen)
-    pygame.display.flip()
+
 
 running = True
 while running:
@@ -239,12 +245,15 @@ while running:
                     if player.pos_x == el.pos_x and player.pos_y == el.pos_y and el.tile_type == 'wall':
                         player.update(4)
     camera.update(player)
-    # обновляем положение всех спрайтов
+
     for sprite in all_sprites:
         camera.apply(sprite)
+    dragon.update()
 
     screen.fill(pygame.Color(0, 0, 0))
     tiles_group.draw(screen)
+
+    all_sprites.draw(screen)
     player_group.draw(screen)
 
     pygame.display.flip()
