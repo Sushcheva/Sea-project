@@ -109,15 +109,17 @@ class Example(QMainWindow):
             s = state
             print(s)
             print(sp)
-            con = sqlite3.connect('database.db')
+            con = sqlite3.connect('5base5.db')
             cur = con.cursor()
             print(cur)
-            rez = cur.execute(f'SELECT * FROM person WHERE name=? AND age=? AND state=?', (n, a, s)).fetchall()
+            rez = cur.execute(f'SELECT * FROM person WHERE name=? AND age=? AND state=?', (n, a, s))
             con.commit()
             print(rez)
-            if rez is None:
-                pass
+            if rez.fetchone() is None:
+                print('uuuuuuuuuuuuuuuuu')
+                cur.execute(f'INSERT INTO person(name, age, state) VALUES(?, ?, ?)', (n, a, s))
             else:
+                print('aaaaaaaaaaaaaaaa')
                 n1, n2, n3 = rez[0]
                 d = f'Ага, вы тот самый {n1}, ваш прошлый результат был равен, мы уверены,вы сможете его улучшить!'
                 QMessageBox.about(self, 'АГА', d)
