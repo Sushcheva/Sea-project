@@ -93,14 +93,20 @@ class Strix(pygame.sprite.Sprite):
     def __init__(self, image, pos, time):
         super().__init__(strix_group, all_sprites)
         self.time = time
+        self.t = 2
         self.c = 200
         self.image = pygame.transform.scale(load_image(image, None), (10, 10))
         self.rect = self.image.get_rect().move(
             pos[0], pos[1])
         self.mask = pygame.mask.from_surface(self.image)
 
-    def update(self):
-        pass
+    def update(self, t):
+        if t/100 - self.time/100 < self.t:
+            pass
+        else:
+            self.image = pygame.transform.scale(load_image('w.png', None), (10, 10))
+            self.mask = pygame.mask.from_surface(self.image)
+
 
 
 class Fruit(pygame.sprite.Sprite):
@@ -140,8 +146,8 @@ class Fruit(pygame.sprite.Sprite):
                 self.pos_x, 600)
             self.mask = pygame.mask.from_surface(self.image)
 
-    def update2(self, pos):
-        if pos == (self.pos_x, self.z):
+    def update2(self, el1):
+        if pygame.sprite.collide_mask(self, el1):
             self.image = pygame.transform.scale(load_image('strawberry1.png', None), (100, 100))
 
 
@@ -179,20 +185,26 @@ def ninja():
         g += 1
     while running:
         y = False
+        x = False
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 running = False
-            if event.type == pygame.MOUSEBUTTONDOWN:
-                Strix('pt.png',event.pos, t)
-                for el in fruit_group:
-                    el.update2(event.pos)
+            if event.type == pygame.MOUSEBUTTONUP:
+                x=True
+            if event.type == pygame.MOUSEMOTION:
+                y = True
+        if y and x:
+            Strix('pt.png', event.pos, t)
+            for el in fruit_group:
+                for el1 in strix_group:
+                    el.update2(el1)
         t += 1
         screen.blit(fon, (0, 0))
         clock.tick(100)
         for el in fruit_group:
             el.update(t)
+        strix_group.update(t)
         fruit_group.draw(screen)
-        strix_group.draw(screen)
         pygame.display.flip()
 
 
