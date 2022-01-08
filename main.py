@@ -1,6 +1,7 @@
 import pygame
 import sys
 import os
+import random
 
 
 
@@ -14,8 +15,8 @@ pygame.init()
 pygame.key.set_repeat(200, 70)
 
 FPS = 50
-WIDTH = 400
-HEIGHT = 300
+WIDTH = 800
+HEIGHT = 800
 STEP = 10
 
 screen = pygame.display.set_mode((WIDTH, HEIGHT))
@@ -144,6 +145,8 @@ class Player(pygame.sprite.Sprite):
             self.pos_x -= 1
 
 
+o = ['map', 'map2', 'map3']
+player, level_x, level_y = generate_level(load_level(random.choice(o)))
 
 class Camera:
     def __init__(self, field_size):
@@ -170,7 +173,6 @@ class Camera:
         self.dy = -(target.rect.y + target.rect.h // 2 - HEIGHT // 2)
 
 
-player, level_x, level_y = generate_level(load_level('map'))
 camera = Camera((level_x, level_y))
 
 
@@ -197,7 +199,7 @@ class AnimatedSprite(pygame.sprite.Sprite):
         self.image = self.frames[self.cur_frame]
 
 
-dragon = AnimatedSprite(load_image("dragon.png"), 9, 1, 50, 50)
+dragon = AnimatedSprite(load_image("dragon.png"), 8, 2, 50, 50)
 running = True
 while running:
     for event in pygame.event.get():
