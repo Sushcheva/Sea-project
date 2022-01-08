@@ -76,8 +76,8 @@ def terminate():
     pygame.quit()
     sys.exit()
 
-tile_images = {'wall': load_image('box.png'), 'empty': load_image('grass.png')}
-player_image = load_image('mar.png')
+tile_images = {'wall': load_image('box1.png'), 'empty': load_image('grass.png')}
+player_image = load_image('mar1.png')
 
 tile_width = tile_height = 50
 
