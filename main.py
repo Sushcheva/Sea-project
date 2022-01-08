@@ -197,7 +197,17 @@ class AnimatedSprite(pygame.sprite.Sprite):
         self.image = self.frames[self.cur_frame]
 
 
-dragon = AnimatedSprite(load_image("dragon.png"), 8, 2, 50, 50)
+dragon = AnimatedSprite(load_image("dragon.png"), 9, 1, 50, 50)
+running = True
+while running:
+    for event in pygame.event.get():
+        if event.type == pygame.QUIT:
+            running = False
+        if event.type == pygame.MOUSEBUTTONDOWN:
+            running = False
+    clock.tick(8)
+    all_sprites.draw(screen)
+    pygame.display.flip()
 
 running = True
 while running:
