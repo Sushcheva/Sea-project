@@ -49,9 +49,14 @@ pygame.init()
 size = 500, 500
 screen = pygame.display.set_mode(size)
 clock = pygame.time.Clock()
-fon = pygame.transform.scale(load_image('game_over.png'), (500, 500))
+fon = pygame.transform.scale(load_image('game over.png'), (500, 500))
 def over_game():
     running = True
+    while running:
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                running = False
+
 
 
 
@@ -90,8 +95,8 @@ def terminate():
     pygame.quit()
     sys.exit()
 
-tile_images = {'wall': load_image('box1.png'), 'empty': load_image('grass.png')}
-player_image = load_image('mar1.png')
+tile_images = {'wall': load_image('box1.png'), 'empty': load_image('grass.png'), 'enemy': load_image('en.png')}
+player_image = load_image('mar2.png')
 
 tile_width = tile_height = 50
 
@@ -157,7 +162,7 @@ class Player(pygame.sprite.Sprite):
             self.rect = self.rect.move(-50, 0)
             self.pos_x -= 1
         if event == 5:
-            open.over_game()
+            over_game()
 
 
 o = ['map', 'map2', 'map3']
@@ -214,7 +219,7 @@ class AnimatedSprite(pygame.sprite.Sprite):
         self.image = self.frames[self.cur_frame]
 
 
-dragon = AnimatedSprite(load_image("dragon.png"), 8, 2, 50, 50)
+dragon = AnimatedSprite(load_image("enemy3.png"), 5, 2, 50, 50)
 
 
 
@@ -229,21 +234,34 @@ while running:
                 for el in tiles_group:
                     if player.pos_x == el.pos_x and player.pos_y == el.pos_y and el.tile_type == 'wall':
                         player.update(3)
+                for el in tiles_group:
+                    if player.pos_x == el.pos_x and player.pos_y == el.pos_y and el.tile_type == 'enemy':
+                        player.update(5)
             elif event.key == pygame.K_DOWN:
                 player.update(1)
                 for el in tiles_group:
                     if player.pos_x == el.pos_x and player.pos_y == el.pos_y and el.tile_type == 'wall':
                         player.update(2)
+                for el in tiles_group:
+                    if player.pos_x == el.pos_x and player.pos_y == el.pos_y and el.tile_type == 'enemy':
+                        player.update(5)
             elif event.key == pygame.K_UP:
                 player.update(2)
                 for el in tiles_group:
                     if player.pos_x == el.pos_x and player.pos_y == el.pos_y and el.tile_type == 'wall':
                         player.update(1)
+                for el in tiles_group:
+                    if player.pos_x == el.pos_x and player.pos_y == el.pos_y and el.tile_type == 'enemy':
+                        player.update(5)
             elif event.key == pygame.K_RIGHT:
                 player.update(3)
                 for el in tiles_group:
                     if player.pos_x == el.pos_x and player.pos_y == el.pos_y and el.tile_type == 'wall':
                         player.update(4)
+                for el in tiles_group:
+                    if player.pos_x == el.pos_x and player.pos_y == el.pos_y and el.tile_type == 'enemy':
+                        player.update(5)
+
     camera.update(player)
 
     for sprite in all_sprites:
