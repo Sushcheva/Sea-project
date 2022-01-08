@@ -213,4 +213,4 @@ while running:
     clock.tick(FPS)
 
 
-terminate(
+terminate()
