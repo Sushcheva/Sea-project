@@ -93,11 +93,10 @@ class Strix(pygame.sprite.Sprite):
     def __init__(self, image, pos, time):
         super().__init__(strix_group, all_sprites)
         self.time = time
-        self.t = 2
-        self.c = 200
-        self.image = pygame.transform.scale(load_image(image, None), (10, 10))
+        self.t = 200
+        self.image = pygame.transform.scale(load_image(image, None), (100, 100))
         self.rect = self.image.get_rect().move(
-            pos[0], pos[1])
+            pos[0] - 50, pos[1]-50)
         self.mask = pygame.mask.from_surface(self.image)
 
     def update(self, t):
@@ -141,15 +140,14 @@ class Fruit(pygame.sprite.Sprite):
                 self.v0 -= 1.2
 
         elif self.z > 500 or self.v0 == self.v1:
-            self.image = pygame.transform.scale(load_image('w.png', None), (100, 100))
+            self.image = pygame.transform.scale(load_image('w.png', None), (10, 10))
             self.rect = self.image.get_rect().move(
                 self.pos_x, 600)
             self.mask = pygame.mask.from_surface(self.image)
 
     def update2(self, el1):
-        if pygame.sprite.collide_mask(self, el1):
+        if self.pos_x <= el1[0] <= self.pos_x + 100 and self.z <= el1[1] <= self.z + 100:
             self.image = pygame.transform.scale(load_image('strawberry1.png', None), (100, 100))
-
 
 def ninja():
     pygame.init()
@@ -171,14 +169,14 @@ def ninja():
         all_sprites.draw(screen)
         pygame.display.flip()
     running = True
-    z = ['apple.png', 'apple.png', 'apple.png', 'mango.png', 'mango.png', 'banana.png', 'banana.png', 'coconut.jpg',
-         'coconut.jpg', 'granat.png', 'pear.png', 'pineapple.png', 'pineapple.png', 'pineapple.png', 'strawberry.png',
-         'strawberry.png', 'strawberry.png', 'bomb.png', 'bomb.png', 'bomb.png']
+    z = ['bomb.png','apple.png', 'apple.png', 'apple.png', 'mango.png', 'mango.png', 'banana.png', 'banana.png', 'coconut.jpg',
+         'coconut.jpg', 'granat.png', 'granat.png','granat.png','granat.png','pear.png', 'pear.png','pear.png','pear.png','pineapple.png', 'pineapple.png', 'pineapple.png', 'strawberry.png',
+         'strawberry.png', 'strawberry.png', 'bomb.png', 'bomb.png', 'bomb.png', 'bomb.png', 'bomb.png', 'bomb.png']
     t = 0
-    z1 = sample(z, 20)
+    z1 = sample(z, 25)
     g = 0
     z2 = []
-    for i in range(20):
+    for i in range(25):
         z2.append(randrange(100, 1500))
     for el in z1:
         Fruit(el, randrange(0, 400), z2[g], el)
@@ -189,21 +187,18 @@ def ninja():
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 running = False
-            if event.type == pygame.MOUSEBUTTONUP:
-                x=True
-            if event.type == pygame.MOUSEMOTION:
-                y = True
-        if y and x:
-            Strix('pt.png', event.pos, t)
-            for el in fruit_group:
-                for el1 in strix_group:
-                    el.update2(el1)
+            if event.type == pygame.MOUSEBUTTONDOWN:
+                Strix('pt.png', event.pos, t)
+                for el in fruit_group:
+                    el.update2(event.pos)
+
         t += 1
         screen.blit(fon, (0, 0))
         clock.tick(100)
         for el in fruit_group:
             el.update(t)
         strix_group.update(t)
+        strix_group.draw(screen)
         fruit_group.draw(screen)
         pygame.display.flip()
 
