@@ -1,7 +1,7 @@
 import pygame
 import sys
 import os
-from random import sample, randrange, choices
+from random import sample, randrange, choice
 
 pygame.font.init()
 FPS = 60
@@ -10,7 +10,45 @@ fruit_group = pygame.sprite.Group()
 person_group = pygame.sprite.Group()
 strix_group = pygame.sprite.Group()
 player = None
+screen_rect = (0, 0, 500, 500)
 
+
+def load_image(name, colorkey=None):
+    fullname = os.path.join('data', name)
+    # если файл не существует, то выходим
+    if not os.path.isfile(fullname):
+        print(f"Файл с изображением '{fullname}' не найден")
+        sys.exit()
+    image = pygame.image.load(fullname)
+    return image
+
+class Particle(pygame.sprite.Sprite):
+    def __init__(self, pos, dx, dy, image):
+        fire = [load_image(image)]
+        for scale in (25, 50, 100):
+            fire.append(pygame.transform.scale(fire[0], (scale, scale)))
+        super().__init__(strix_group)
+        self.image = choice(fire)
+        self.rect = self.image.get_rect()
+
+        # у каждой частицы своя скорость — это вектор
+        self.velocity = [dx, dy]
+        # и свои координаты
+        self.rect.x, self.rect.y = pos
+
+        # гравитация будет одинаковой (значение константы)
+        self.gravity = 0.1
+
+    def update(self, t):
+        # применяем гравитационный эффект:
+        # движение с ускорением под действием гравитации
+        self.velocity[1] += self.gravity
+        # перемещаем частицу
+        self.rect.x += self.velocity[0]
+        self.rect.y += self.velocity[1]
+        # убиваем, если частица ушла за экран
+        if not self.rect.colliderect(screen_rect):
+            self.kill()
 
 class AnimatedSprite(pygame.sprite.Sprite):
     def __init__(self, sheet, image1, columns, rows, x, y):
@@ -56,15 +94,13 @@ class Heroes(AnimatedSprite):
                 self.image = pygame.transform.scale(self.image, (78 * self.z, 197 * self.z))
 
 
-def load_image(name, colorkey=None):
-    fullname = os.path.join('data', name)
-    # если файл не существует, то выходим
-    if not os.path.isfile(fullname):
-        print(f"Файл с изображением '{fullname}' не найден")
-        sys.exit()
-    image = pygame.image.load(fullname)
-    return image
-
+def create_particles(position):
+    # количество создаваемых частиц
+    particle_count = 7
+    # возможные скорости
+    numbers = range(-5, 6)
+    for _ in range(particle_count):
+        Particle(position, choice(numbers), choice(numbers), 'b.png')
 
 tile_images = {
     'wall': load_image('box.png', None),
@@ -148,6 +184,8 @@ class Fruit(pygame.sprite.Sprite):
     def update2(self, el1):
         if self.pos_x <= el1[0] <= self.pos_x + 100 and self.z <= el1[1] <= self.z + 100:
             self.image = pygame.transform.scale(load_image('strawberry1.png', None), (100, 100))
+            Strix('br.png', el1, 1)
+
 
 def ninja():
     pygame.init()
@@ -188,6 +226,7 @@ def ninja():
             if event.type == pygame.QUIT:
                 running = False
             if event.type == pygame.MOUSEBUTTONDOWN:
+                create_particles(pygame.mouse.get_pos())
                 Strix('pt.png', event.pos, t)
                 for el in fruit_group:
                     el.update2(event.pos)
