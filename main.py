@@ -1,9 +1,8 @@
 import sqlite3
 import sys
 
-from PyQt5.QtWidgets import QApplication, QPushButton, QComboBox, QMainWindow, QGridLayout, QWidget, \
-    QTableWidget, QTableWidgetItem, QCheckBox, QInputDialog, QTextBrowser, QLabel, QMessageBox
-from PyQt5.QtCore import QSize, Qt
+from PyQt5.QtWidgets import QApplication, QPushButton, QMainWindow, \
+     QInputDialog, QLabel, QMessageBox
 from PyQt5 import QtGui  # для измениения шрифта
 from PyQt5.QtGui import QPixmap
 
