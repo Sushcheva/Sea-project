@@ -9,6 +9,7 @@ sp = []
 n = ' '
 a = ' '
 s = ' '
+st = 0
 
 
 pygame.init()
@@ -45,19 +46,24 @@ def load_image(name, color_key=None):
     return image
 
 
-pygame.init()
-size = 500, 500
-screen = pygame.display.set_mode(size)
-clock = pygame.time.Clock()
-fon = pygame.transform.scale(load_image('game over.png'), (500, 500))
+
+
 def over_game():
+    pygame.init()
+    size1 = 1000, 1000
+    screen1 = pygame.display.set_mode(size1)
+    clock1 = pygame.time.Clock()
+    fon1 = pygame.transform.scale(load_image('game over.png'), (500, 500))
+    exit(screen)
+    quit(screen1)
     running = True
     while running:
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 running = False
-
-
+            elif event.type == pygame.KEYDOWN:
+                if event.type == pygame.K_ESCAPE:
+                     terminate()
 
 
 
@@ -84,6 +90,8 @@ def generate_level(level):
                 Tile('wall', x, y)
             elif level[y][x] == '@':
                 Tile('empty', x, y)
+            elif level[y][x] == '$':
+                Tile('star', x, y)
             elif level[y][x] == '!':
                 Tile('enemy', x, y)
                 new_player = Player(x, y)
@@ -95,7 +103,8 @@ def terminate():
     pygame.quit()
     sys.exit()
 
-tile_images = {'wall': load_image('box1.png'), 'empty': load_image('grass.png'), 'enemy': load_image('en.png')}
+tile_images = {'wall': load_image('box1.png'), 'empty': load_image('grass.png'), 'enemy': load_image('en.png'), \
+               'star': load_image('star.png')}
 player_image = load_image('mar2.png')
 
 tile_width = tile_height = 50
@@ -138,6 +147,7 @@ class Tile(pygame.sprite.Sprite):
 
 
 class Player(pygame.sprite.Sprite):
+
     def __init__(self, pos_x, pos_y):
         super().__init__(player_group, all_sprites)
         self.image = player_image
@@ -149,6 +159,7 @@ class Player(pygame.sprite.Sprite):
         self.mask = pygame.mask.from_surface(self.image)
 
     def update(self, event):
+        global st
         if event == 1:
             self.rect = self.rect.move(0, 50)
             self.pos_y += 1
@@ -163,6 +174,9 @@ class Player(pygame.sprite.Sprite):
             self.pos_x -= 1
         if event == 5:
             over_game()
+        if event == 6:
+            st += 1
+            print(st)
 
 
 o = ['map', 'map2', 'map3']
@@ -237,6 +251,9 @@ while running:
                 for el in tiles_group:
                     if player.pos_x == el.pos_x and player.pos_y == el.pos_y and el.tile_type == 'enemy':
                         player.update(5)
+                for el in tiles_group:
+                    if player.pos_x == el.pos_x and player.pos_y == el.pos_y and el.tile_type == 'star':
+                        player.update(6)
             elif event.key == pygame.K_DOWN:
                 player.update(1)
                 for el in tiles_group:
@@ -245,6 +262,9 @@ while running:
                 for el in tiles_group:
                     if player.pos_x == el.pos_x and player.pos_y == el.pos_y and el.tile_type == 'enemy':
                         player.update(5)
+                for el in tiles_group:
+                    if player.pos_x == el.pos_x and player.pos_y == el.pos_y and el.tile_type == 'star':
+                        player.update(6)
             elif event.key == pygame.K_UP:
                 player.update(2)
                 for el in tiles_group:
@@ -253,6 +273,9 @@ while running:
                 for el in tiles_group:
                     if player.pos_x == el.pos_x and player.pos_y == el.pos_y and el.tile_type == 'enemy':
                         player.update(5)
+                for el in tiles_group:
+                    if player.pos_x == el.pos_x and player.pos_y == el.pos_y and el.tile_type == 'star':
+                        player.update(6)
             elif event.key == pygame.K_RIGHT:
                 player.update(3)
                 for el in tiles_group:
@@ -261,6 +284,9 @@ while running:
                 for el in tiles_group:
                     if player.pos_x == el.pos_x and player.pos_y == el.pos_y and el.tile_type == 'enemy':
                         player.update(5)
+                for el in tiles_group:
+                    if player.pos_x == el.pos_x and player.pos_y == el.pos_y and el.tile_type == 'star':
+                        player.update(6)
 
     camera.update(player)
 
@@ -279,3 +305,4 @@ while running:
 
 
 terminate()
+
