@@ -33,6 +33,7 @@ def load_image(name, color_key=None):
     fullname = os.path.join('data1', name)
     try:
         image = pygame.image.load(fullname).convert()
+        image.set_colorkey((0, 0, 0))
     except pygame.error as message:
         print('Cannot load image:', name)
         raise SystemExit(message)
