@@ -200,6 +200,7 @@ class AnimatedSprite(pygame.sprite.Sprite):
 
 
 dragon = AnimatedSprite(load_image("dragon.png"), 8, 2, 50, 50)
+
 running = True
 while running:
     for event in pygame.event.get():
