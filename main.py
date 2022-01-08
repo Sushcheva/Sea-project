@@ -22,10 +22,11 @@ def load_image(name, colorkey=None):
     image = pygame.image.load(fullname)
     return image
 
+
 class Particle(pygame.sprite.Sprite):
     def __init__(self, pos, dx, dy, image):
         fire = [load_image(image)]
-        for scale in (25, 50, 100):
+        for scale in (15, 20, 25 ,25, 50, 75,  100):
             fire.append(pygame.transform.scale(fire[0], (scale, scale)))
         super().__init__(strix_group)
         self.image = choice(fire)
@@ -39,7 +40,7 @@ class Particle(pygame.sprite.Sprite):
         # гравитация будет одинаковой (значение константы)
         self.gravity = 0.1
 
-    def update(self, t):
+    def update(self):
         # применяем гравитационный эффект:
         # движение с ускорением под действием гравитации
         self.velocity[1] += self.gravity
@@ -49,6 +50,7 @@ class Particle(pygame.sprite.Sprite):
         # убиваем, если частица ушла за экран
         if not self.rect.colliderect(screen_rect):
             self.kill()
+
 
 class AnimatedSprite(pygame.sprite.Sprite):
     def __init__(self, sheet, image1, columns, rows, x, y):
@@ -96,11 +98,12 @@ class Heroes(AnimatedSprite):
 
 def create_particles(position):
     # количество создаваемых частиц
-    particle_count = 7
+    particle_count = 20
     # возможные скорости
     numbers = range(-5, 6)
     for _ in range(particle_count):
         Particle(position, choice(numbers), choice(numbers), 'b.png')
+
 
 tile_images = {
     'wall': load_image('box.png', None),
@@ -132,16 +135,10 @@ class Strix(pygame.sprite.Sprite):
         self.t = 200
         self.image = pygame.transform.scale(load_image(image, None), (100, 100))
         self.rect = self.image.get_rect().move(
-            pos[0] - 50, pos[1]-50)
+            pos[0] - 50, pos[1] - 50)
         self.mask = pygame.mask.from_surface(self.image)
-
-    def update(self, t):
-        if t/100 - self.time/100 < self.t:
-            pass
-        else:
-            self.image = pygame.transform.scale(load_image('w.png', None), (10, 10))
-            self.mask = pygame.mask.from_surface(self.image)
-
+    def update(self):
+        pass
 
 
 class Fruit(pygame.sprite.Sprite):
@@ -183,8 +180,9 @@ class Fruit(pygame.sprite.Sprite):
 
     def update2(self, el1):
         if self.pos_x <= el1[0] <= self.pos_x + 100 and self.z <= el1[1] <= self.z + 100:
-            self.image = pygame.transform.scale(load_image('strawberry1.png', None), (100, 100))
+            self.image = pygame.transform.scale(load_image(self.image1, None), (100, 100))
             Strix('br.png', el1, 1)
+            create_particles(el1)
 
 
 def ninja():
@@ -207,8 +205,10 @@ def ninja():
         all_sprites.draw(screen)
         pygame.display.flip()
     running = True
-    z = ['bomb.png','apple.png', 'apple.png', 'apple.png', 'mango.png', 'mango.png', 'banana.png', 'banana.png', 'coconut.jpg',
-         'coconut.jpg', 'granat.png', 'granat.png','granat.png','granat.png','pear.png', 'pear.png','pear.png','pear.png','pineapple.png', 'pineapple.png', 'pineapple.png', 'strawberry.png',
+    z = ['bomb.png', 'apple.png', 'apple.png', 'apple.png', 'mango.png', 'mango.png', 'banana.png', 'banana.png',
+         'coconut.png',
+         'coconut.png', 'granat.png', 'granat.png', 'granat.png', 'granat.png', 'pear.png', 'pear.png', 'pear.png',
+         'pear.png', 'pineapple.png', 'pineapple.png', 'pineapple.png', 'strawberry.png',
          'strawberry.png', 'strawberry.png', 'bomb.png', 'bomb.png', 'bomb.png', 'bomb.png', 'bomb.png', 'bomb.png']
     t = 0
     z1 = sample(z, 25)
@@ -217,7 +217,7 @@ def ninja():
     for i in range(25):
         z2.append(randrange(100, 1500))
     for el in z1:
-        Fruit(el, randrange(0, 400), z2[g], el)
+        Fruit(el, randrange(0, 400), z2[g], str(el[:-4] + '1' + el[-4:]))
         g += 1
     while running:
         y = False
@@ -226,20 +226,20 @@ def ninja():
             if event.type == pygame.QUIT:
                 running = False
             if event.type == pygame.MOUSEBUTTONDOWN:
-                create_particles(pygame.mouse.get_pos())
                 Strix('pt.png', event.pos, t)
                 for el in fruit_group:
                     el.update2(event.pos)
 
         t += 1
         screen.blit(fon, (0, 0))
-        clock.tick(100)
+
         for el in fruit_group:
             el.update(t)
-        strix_group.update(t)
+        strix_group.update()
         strix_group.draw(screen)
         fruit_group.draw(screen)
         pygame.display.flip()
+        clock.tick(100)
 
 
 ninja()
