@@ -109,7 +109,7 @@ class Example(QMainWindow):
             s = state
             print(s)
             print(sp)
-            con = sqlite3.connect('base.db')
+            con = sqlite3.connect('database.db')
             cur = con.cursor()
             print(cur)
             rez = cur.execute(f'SELECT * FROM person WHERE name=? AND age=? AND state=?', (n, a, s)).fetchall()
@@ -125,6 +125,9 @@ class Example(QMainWindow):
     def open_seven_form(self):
         pass
 
+
+def e(a, b, c):
+    sys.__excepthook__(a, b, c)
 
 
 if __name__ == '__main__':
