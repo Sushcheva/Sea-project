@@ -8,6 +8,7 @@ FPS = 60
 all_sprites = pygame.sprite.Group()
 fruit_group = pygame.sprite.Group()
 person_group = pygame.sprite.Group()
+strix_group = pygame.sprite.Group()
 player = None
 
 
@@ -88,13 +89,27 @@ class CloudsText(pygame.sprite.Sprite):
         pass
 
 
+class Strix(pygame.sprite.Sprite):
+    def __init__(self, image, pos, time):
+        super().__init__(strix_group, all_sprites)
+        self.time = time
+        self.c = 200
+        self.image = pygame.transform.scale(load_image(image, None), (10, 10))
+        self.rect = self.image.get_rect().move(
+            pos[0], pos[1])
+        self.mask = pygame.mask.from_surface(self.image)
+
+    def update(self):
+        pass
+
+
 class Fruit(pygame.sprite.Sprite):
     def __init__(self, image, pos_x, time, image1):
         super().__init__(fruit_group, all_sprites)
         self.image1 = image1
         self.time = time
-        self.v0 = randrange(-550, -300)
-        self.v1 =abs(self.v0)
+        self.v0 = randrange(-500, -350)
+        self.v1 = abs(self.v0)
         self.image = pygame.transform.scale(load_image(image, None), (100, 100))
         self.rect = self.image.get_rect().move(
             pos_x, 500)
@@ -105,23 +120,29 @@ class Fruit(pygame.sprite.Sprite):
 
     def update(self, t):
         if self.time <= t:
-            t1 = t/100-self.time/100
+            t1 = t / 100 - self.time / 100
             if self.v0 < 0:
                 self.rect = self.image.get_rect().move(
                     self.pos_x, self.x0 + self.v0 * t1 + 0.6 * (t1 ** 2))
-                self.v0 += 1.2
+
                 self.z = self.x0 + self.v0 * t1 + 0.6 * (t1 ** 2)
+                self.v0 += 1.2
             else:
                 self.rect = self.image.get_rect().move(
                     self.pos_x, self.x0 - self.v0 * t1 + 0.6 * (t1 ** 2))
-                self.v0 -= 1.2
+
                 self.z = self.x0 - self.v0 * t1 + 0.6 * (t1 ** 2)
+                self.v0 -= 1.2
 
         elif self.z > 500 or self.v0 == self.v1:
             self.image = pygame.transform.scale(load_image('w.png', None), (100, 100))
             self.rect = self.image.get_rect().move(
                 self.pos_x, 600)
             self.mask = pygame.mask.from_surface(self.image)
+
+    def update2(self, pos):
+        if pos == (self.pos_x, self.z):
+            self.image = pygame.transform.scale(load_image('strawberry1.png', None), (100, 100))
 
 
 def ninja():
@@ -156,17 +177,22 @@ def ninja():
     for el in z1:
         Fruit(el, randrange(0, 400), z2[g], el)
         g += 1
-
     while running:
+        y = False
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 running = False
+            if event.type == pygame.MOUSEBUTTONDOWN:
+                Strix('pt.png',event.pos, t)
+                for el in fruit_group:
+                    el.update2(event.pos)
         t += 1
         screen.blit(fon, (0, 0))
         clock.tick(100)
         for el in fruit_group:
             el.update(t)
         fruit_group.draw(screen)
+        strix_group.draw(screen)
         pygame.display.flip()
 
 
