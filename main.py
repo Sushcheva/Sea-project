@@ -127,10 +127,6 @@ class Example(QMainWindow):
 
 
 
-def e(a, b, c):
-    sys.__excepthook__(a, b, c)
-
-
 if __name__ == '__main__':
     app = QApplication(sys.argv)
     sys.excepthook = e
