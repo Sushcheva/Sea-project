@@ -24,12 +24,16 @@ def load_image(name, colorkey=None):
 
 
 class Particle(pygame.sprite.Sprite):
-    def __init__(self, pos, dx, dy, image):
+    def __init__(self, pos, dx, dy, image,r=0):
         fire = [load_image(image)]
         for scale in (15, 20, 25 ,25, 50, 75,  100):
             fire.append(pygame.transform.scale(fire[0], (scale, scale)))
         super().__init__(strix_group)
-        self.image = choice(fire)
+        if r == 0:
+            self.image = choice(fire)
+        else:
+            self.image = pygame.transform.scale(fire[0], (r, r))
+        self.rect = self.image.get_rect()
         self.rect = self.image.get_rect()
 
         # у каждой частицы своя скорость — это вектор
@@ -98,7 +102,7 @@ class Heroes(AnimatedSprite):
 
 def create_particles(position):
     # количество создаваемых частиц
-    particle_count = 20
+    particle_count = 10
     # возможные скорости
     numbers = range(-5, 6)
     for _ in range(particle_count):
@@ -180,9 +184,11 @@ class Fruit(pygame.sprite.Sprite):
 
     def update2(self, el1):
         if self.pos_x <= el1[0] <= self.pos_x + 100 and self.z <= el1[1] <= self.z + 100:
-            self.image = pygame.transform.scale(load_image(self.image1, None), (100, 100))
+            self.image = pygame.transform.scale(load_image('w.png', None), (100, 100))
             Strix('br.png', el1, 1)
             create_particles(el1)
+            Particle(el1, -4, 4, self.image1)
+            Particle(el1, 4, 4, self.image1)
 
 
 def ninja():
