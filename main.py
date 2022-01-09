@@ -187,8 +187,8 @@ class Fruit(pygame.sprite.Sprite):
             self.image = pygame.transform.scale(load_image('w.png', None), (100, 100))
             Strix('br.png', el1, 1)
             create_particles(el1)
-            Particle(el1, -5, -2, self.image1, 100)
-            Particle(el1, 5, -2, self.image1, 100)
+            Particle(el1, -1, -3, self.image1, 75)
+            Particle(el1, 1, -3, self.image1, 75)
 
 
 def ninja():
