@@ -100,13 +100,13 @@ class Heroes(AnimatedSprite):
                 self.image = pygame.transform.scale(self.image, (78 * self.z, 197 * self.z))
 
 
-def create_particles(position):
+def create_particles(position, image):
     # количество создаваемых частиц
     particle_count = 10
     # возможные скорости
     numbers = range(-5, 6)
     for _ in range(particle_count):
-        Particle(position, choice(numbers), choice(numbers), 'b.png')
+        Particle(position, choice(numbers), choice(numbers), image)
 
 
 tile_images = {
@@ -149,6 +149,10 @@ class Fruit(pygame.sprite.Sprite):
     def __init__(self, image, pos_x, time, image1):
         super().__init__(fruit_group, all_sprites)
         self.image1 = image1
+        if image != 'bomb.png':
+            self.type = 'Fruit'
+        else:
+            self.type = 'Bomb'
         self.time = time
         self.v0 = randrange(-500, -350)
         self.v1 = abs(self.v0)
@@ -185,10 +189,18 @@ class Fruit(pygame.sprite.Sprite):
     def update2(self, el1):
         if self.pos_x <= el1[0] <= self.pos_x + 100 and self.z <= el1[1] <= self.z + 100:
             self.image = pygame.transform.scale(load_image('w.png', None), (100, 100))
-            Strix('br.png', el1, 1)
-            create_particles(el1)
-            Particle(el1, -1, -3, self.image1, 75)
-            Particle(el1, 1, -3, self.image1, 75)
+            if self.type == 'Fruit':
+                Strix('br.png', el1, 1)
+                create_particles(el1,'b.png')
+                Particle(el1, -1, -3, self.image1, 75)
+                Particle(el1, 1, -3, self.image1, 75)
+                self.type = 'Cut'
+            elif self.type == 'Bomb':
+                Strix('bu.png', el1, 1)
+                create_particles(el1, 'fire.png')
+                self.image = pygame.transform.scale(load_image('boom1.png', None), (100, 100))
+                self.type = 'Bombed'
+
 
 
 def ninja():
@@ -220,6 +232,7 @@ def ninja():
     z1 = sample(z, 25)
     g = 0
     z2 = []
+    lifes = 3
     for i in range(25):
         z2.append(randrange(100, 1500))
     for el in z1:
