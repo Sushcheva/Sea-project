@@ -24,9 +24,9 @@ def load_image(name, colorkey=None):
 
 
 class Particle(pygame.sprite.Sprite):
-    def __init__(self, pos, dx, dy, image,r=0):
+    def __init__(self, pos, dx, dy, image, r=0):
         fire = [load_image(image)]
-        for scale in (15, 20, 25 ,25, 50, 75,  100):
+        for scale in (15, 20, 25, 25, 50, 75, 100):
             fire.append(pygame.transform.scale(fire[0], (scale, scale)))
         super().__init__(strix_group)
         if r == 0:
@@ -123,17 +123,18 @@ class CloudsText(pygame.sprite.Sprite):
         super().__init__(person_group, all_sprites)
         f = open('18.txt')
         f = f.readlines()
+        self.f = f
         self.hero = hero
         for el in f:
             if el == hero:
-                self.number = f.index(el)+ 1
+                self.number = self.f.index(el) + 1
         self.image = load_image('cloud.png', None)
         self.rect = self.image.get_rect().move(
             400, 400)
         self.mask = pygame.mask.from_surface(self.image)
 
-    def update(self):
-        pass
+    def update(self,n):
+        self.f[n]
 
 
 class Strix(pygame.sprite.Sprite):
@@ -196,7 +197,7 @@ class Fruit(pygame.sprite.Sprite):
             self.image = pygame.transform.scale(load_image('w.png', None), (100, 100))
             if self.type == 'Fruit':
                 Strix('br.png', el1, 1)
-                create_particles(el1,'b.png')
+                create_particles(el1, 'b.png')
                 Particle(el1, -1, -3, self.image1, 75)
                 Particle(el1, 1, -3, self.image1, 75)
                 self.type = 'Cut'
@@ -205,7 +206,6 @@ class Fruit(pygame.sprite.Sprite):
                 create_particles(el1, 'fire.png')
                 self.image = pygame.transform.scale(load_image('boom1.png', None), (100, 100))
                 self.type = 'Bombed'
-
 
 
 def ninja():
@@ -232,7 +232,8 @@ def ninja():
          'coconut.png',
          'coconut.png', 'granat.png', 'granat.png', 'granat.png', 'granat.png', 'pear.png', 'pear.png', 'pear.png',
          'pear.png', 'pineapple.png', 'pineapple.png', 'pineapple.png', 'strawberry.png',
-         'strawberry.png', 'strawberry.png', 'bomb.png', 'bomb.png', 'bomb.png', 'bomb.png', 'bomb.png', 'bomb.png','bomb.png', 'apple.png', 'apple.png', 'apple.png', 'mango.png', 'mango.png', 'banana.png', 'banana.png',
+         'strawberry.png', 'strawberry.png', 'bomb.png', 'bomb.png', 'bomb.png', 'bomb.png', 'bomb.png', 'bomb.png',
+         'bomb.png', 'apple.png', 'apple.png', 'apple.png', 'mango.png', 'mango.png', 'banana.png', 'banana.png',
          'coconut.png',
          'coconut.png', 'granat.png', 'granat.png', 'granat.png', 'granat.png', 'pear.png', 'pear.png', 'pear.png',
          'pear.png', 'pineapple.png', 'pineapple.png', 'pineapple.png', 'strawberry.png',
