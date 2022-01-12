@@ -119,11 +119,15 @@ tile_width = tile_height = 50
 
 
 class CloudsText(pygame.sprite.Sprite):
-    def __init__(self, hero, number):
+    def __init__(self, hero):
         super().__init__(person_group, all_sprites)
-        self.hero = player_image
-        self.number = number
-        self.image = load_image('cloud.jpg', None)
+        f = open('18.txt')
+        f = f.readlines()
+        self.hero = hero
+        for el in f:
+            if el == hero:
+                self.number = f.index(el)+ 1
+        self.image = load_image('cloud.png', None)
         self.rect = self.image.get_rect().move(
             400, 400)
         self.mask = pygame.mask.from_surface(self.image)
@@ -141,6 +145,7 @@ class Strix(pygame.sprite.Sprite):
         self.rect = self.image.get_rect().move(
             pos[0] - 50, pos[1] - 50)
         self.mask = pygame.mask.from_surface(self.image)
+
     def update(self):
         pass
 
@@ -169,16 +174,16 @@ class Fruit(pygame.sprite.Sprite):
             t1 = t / 100 - self.time / 100
             if self.v0 < 0:
                 self.rect = self.image.get_rect().move(
-                    self.pos_x, self.x0 + self.v0 * t1 + 0.6 * (t1 ** 2))
+                    self.pos_x, self.x0 + self.v0 * t1 + 0.8 * (t1 ** 2))
 
-                self.z = self.x0 + self.v0 * t1 + 0.6 * (t1 ** 2)
-                self.v0 += 1.2
+                self.z = self.x0 + self.v0 * t1 + 0.8 * (t1 ** 2)
+                self.v0 += 1.6
             else:
                 self.rect = self.image.get_rect().move(
-                    self.pos_x, self.x0 - self.v0 * t1 + 0.6 * (t1 ** 2))
+                    self.pos_x, self.x0 - self.v0 * t1 + 0.8 * (t1 ** 2))
 
-                self.z = self.x0 - self.v0 * t1 + 0.6 * (t1 ** 2)
-                self.v0 -= 1.2
+                self.z = self.x0 - self.v0 * t1 + 0.8 * (t1 ** 2)
+                self.v0 -= 1.6
 
         elif self.z > 500 or self.v0 == self.v1:
             self.image = pygame.transform.scale(load_image('w.png', None), (10, 10))
@@ -227,14 +232,18 @@ def ninja():
          'coconut.png',
          'coconut.png', 'granat.png', 'granat.png', 'granat.png', 'granat.png', 'pear.png', 'pear.png', 'pear.png',
          'pear.png', 'pineapple.png', 'pineapple.png', 'pineapple.png', 'strawberry.png',
+         'strawberry.png', 'strawberry.png', 'bomb.png', 'bomb.png', 'bomb.png', 'bomb.png', 'bomb.png', 'bomb.png','bomb.png', 'apple.png', 'apple.png', 'apple.png', 'mango.png', 'mango.png', 'banana.png', 'banana.png',
+         'coconut.png',
+         'coconut.png', 'granat.png', 'granat.png', 'granat.png', 'granat.png', 'pear.png', 'pear.png', 'pear.png',
+         'pear.png', 'pineapple.png', 'pineapple.png', 'pineapple.png', 'strawberry.png',
          'strawberry.png', 'strawberry.png', 'bomb.png', 'bomb.png', 'bomb.png', 'bomb.png', 'bomb.png', 'bomb.png']
     t = 0
-    z1 = sample(z, 25)
+    z1 = sample(z, 50)
     g = 0
     z2 = []
     lifes = 3
-    for i in range(25):
-        z2.append(randrange(100, 1500))
+    for i in range(50):
+        z2.append(randrange(100, 2500))
     for el in z1:
         Fruit(el, randrange(0, 400), z2[g], str(el[:-4] + '1' + el[-4:]))
         g += 1
