@@ -94,12 +94,10 @@ class Heroes(AnimatedSprite):
         else:
             self.z += 0.2
             if self.z >= 2.5:
-                self.frames = []
-                self.cut_sheet(self.image1, 5, 1)
-                self.cur_frame = 0
-                self.image = self.frames[self.cur_frame]
+                self.image = load_image('njump1.png')
+                self.image = pygame.transform.scale(self.image, (78 * 2.5, 197 * 2.5))
             else:
-                self.image = load_image(self.sheet)
+                self.image = load_image('njump1.png')
                 self.image = pygame.transform.scale(self.image, (78 * self.z, 197 * self.z))
 
 
@@ -123,8 +121,8 @@ tile_width = tile_height = 50
 
 class CloudsText(pygame.sprite.Sprite):
     def __init__(self, hero):
-        super().__init__(person_group, all_sprites)
-        f = open('18.txt')
+        super().__init__(person_group)
+        f = open('18.txt', encoding="utf8")
         f = f.readlines()
         self.f = f
         self.hero = hero
@@ -138,11 +136,12 @@ class CloudsText(pygame.sprite.Sprite):
 
     def update(self,n, screen):
         font = pygame.font.Font(None, 30)
-        text_coord = 410
-        self.image = load_image('cloud.png', None)
+        text_coord = 110
+        self.image = pygame.transform.scale(load_image('cloud.png', None), (100, 100))
         self.rect = self.image.get_rect().move(
-            400, 400)
-        string_rendered = font.render(self.f[n], 1, pygame.Color('black'))
+            100, 100)
+        if n < len(self.f):
+            string_rendered = font.render(self.f[n], 1, pygame.Color('black'))
         intro_rect = string_rendered.get_rect()
         intro_rect.top = text_coord
         intro_rect.x = 410
@@ -230,16 +229,20 @@ def ninja():
     CloudsText('Ниндзя')
     nindja = Heroes(load_image("njump.png"), 'nudar.png', 9, 1, 50, 50)
     running = True
+    t = 0
     while running:
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 running = False
             if event.type == pygame.MOUSEBUTTONDOWN:
-                running = False
+                person_group.update(t, screen)
+                t += 1
         screen.blit(fon, (0, 0))
         all_sprites.update()
+
         clock.tick(8)
         all_sprites.draw(screen)
+        person_group.draw(screen)
         pygame.display.flip()
     running = True
     z = ['bomb.png', 'apple.png', 'apple.png', 'apple.png', 'mango.png', 'mango.png', 'banana.png', 'banana.png',
