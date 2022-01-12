@@ -62,6 +62,7 @@ class AnimatedSprite(pygame.sprite.Sprite):
         self.image1 = image1
         self.z = 1
         self.frames = []
+        self.sheet = sheet
         self.cut_sheet(sheet, columns, rows)
         self.cur_frame = 0
         self.image = self.frames[self.cur_frame]
@@ -93,10 +94,12 @@ class Heroes(AnimatedSprite):
         else:
             self.z += 0.2
             if self.z >= 2.5:
-                self.image = load_image(self.image1)
-                self.image = pygame.transform.scale(self.image, (78 * 3, 197 * 3))
+                self.frames = []
+                self.cut_sheet(self.image1, 5, 1)
+                self.cur_frame = 0
+                self.image = self.frames[self.cur_frame]
             else:
-                self.image = load_image(self.image1)
+                self.image = load_image(self.sheet)
                 self.image = pygame.transform.scale(self.image, (78 * self.z, 197 * self.z))
 
 
@@ -133,8 +136,18 @@ class CloudsText(pygame.sprite.Sprite):
             400, 400)
         self.mask = pygame.mask.from_surface(self.image)
 
-    def update(self,n):
-        self.f[n]
+    def update(self,n, screen):
+        font = pygame.font.Font(None, 30)
+        text_coord = 410
+        self.image = load_image('cloud.png', None)
+        self.rect = self.image.get_rect().move(
+            400, 400)
+        string_rendered = font.render(self.f[n], 1, pygame.Color('black'))
+        intro_rect = string_rendered.get_rect()
+        intro_rect.top = text_coord
+        intro_rect.x = 410
+        text_coord += intro_rect.height
+        screen.blit(string_rendered, intro_rect)
 
 
 class Strix(pygame.sprite.Sprite):
@@ -214,7 +227,8 @@ def ninja():
     screen = pygame.display.set_mode(size)
     clock = pygame.time.Clock()
     fon = pygame.transform.scale(load_image('les.png'), (500, 500))
-    nindja = Heroes(load_image("njump.png"), 'njump1.png', 9, 1, 50, 50)
+    CloudsText('Ниндзя')
+    nindja = Heroes(load_image("njump.png"), 'nudar.png', 9, 1, 50, 50)
     running = True
     while running:
         for event in pygame.event.get():
