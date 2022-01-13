@@ -1,24 +1,17 @@
-import sys
 import sqlite3
 import pygame
+import sys
 import os
 import random
 
-from PyQt5.QtWidgets import QApplication, QPushButton, QMainWindow, \
-     QInputDialog, QLabel, QMessageBox
-from PyQt5 import QtGui  # для измениения шрифта
-from PyQt5.QtGui import QPixmap
-from PyQt5.QtWidgets import QPushButton, QApplication, QWidget, QInputDialog, QLabel
-from PyQt5 import QtGui
-from PyQt5.QtGui import QPixmap, QBrush, QPalette, QMovie, QPainter
 st = 0
 d = ['en.png', 'enn.png', 'ennn.png']
 pygame.init()
 pygame.key.set_repeat(200, 70)
 
 FPS = 50
-WIDTH = 800
-HEIGHT = 800
+WIDTH = 900
+HEIGHT = 900
 STEP = 10
 
 screen = pygame.display.set_mode((WIDTH, HEIGHT))
@@ -46,8 +39,6 @@ def load_image(name, color_key=None):
     else:
         image = image.convert_alpha()
     return image
-
-
 
 
 def over_game():
@@ -97,6 +88,8 @@ def generate_level(level):
                 Tile('star', x, y)
             elif level[y][x] == '!':
                 Tile('enemy', x, y)
+            elif level[y][x] == ')':
+                Tile('door', x, y)
     # вернем игрока, а также размер поля в клетках
     return new_player, x, y
 
@@ -105,8 +98,8 @@ def terminate():
     pygame.quit()
     sys.exit()
 
-tile_images = {'wall': load_image('box1.png'), 'empty': load_image('grass.png'), 'enemy': load_image(random.choice(d)), \
-               'star': load_image('star.png')}
+tile_images = {'wall': load_image('box1.png'), 'empty': load_image('grass.png'), \
+               'enemy': load_image(random.choice(d)),'door': load_image('door.png'), 'star': load_image('star.png')}
 player_image = load_image('mar2.png')
 
 tile_width = tile_height = 50
@@ -181,8 +174,26 @@ class Player(pygame.sprite.Sprite):
             for el in tiles_group:
                 if el.pos_x == self.pos_x and el.pos_y == self.pos_y:
                     el.image = load_image('grass.png')
-                    el.type = 'empty'
+                    el.tile_type = 'empty'
             print(st)
+
+def over_game():
+    pygame.init()
+    size = 900, 800
+    screen = pygame.display.set_mode(size)
+    clock = pygame.time.Clock()
+    running = True
+    fon = pygame.transform.scale(load_image('game over.png'), (900, 800))
+    while running:
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                running = False
+            if event.type == pygame.MOUSEBUTTONDOWN:
+                pass
+        screen.blit(fon, (0, 0))
+        clock.tick(8)
+        pygame.display.flip()
+
 
 
 o = ['map', 'map2', 'map3']
@@ -240,6 +251,7 @@ class AnimatedSprite(pygame.sprite.Sprite):
 
 
 dragon = AnimatedSprite(load_image("enemy3.png"), 5, 2, 50, 50)
+dragon1 = AnimatedSprite(load_image("enemy3.png"), 5, 2, 300, 50)
 
 
 
@@ -291,6 +303,7 @@ while running:
     for sprite in all_sprites:
         camera.apply(sprite)
     dragon.update()
+    dragon1.update()
 
     screen.fill(pygame.Color(0, 0, 0))
     tiles_group.draw(screen)
