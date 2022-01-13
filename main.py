@@ -9,7 +9,7 @@ d = ['en.png', 'enn.png', 'ennn.png']
 pygame.init()
 pygame.key.set_repeat(200, 70)
 
-FPS = 50
+FPS = 1
 WIDTH = 900
 HEIGHT = 900
 STEP = 10
