@@ -26,7 +26,7 @@ def load_image(name, colorkey=None):
 class Particle(pygame.sprite.Sprite):
     def __init__(self, pos, dx, dy, image, r=0):
         fire = [load_image(image)]
-        for scale in (15, 20, 25, 25, 50, 75, 100):
+        for scale in (15, 20, 25, 25, 50):
             fire.append(pygame.transform.scale(fire[0], (scale, scale)))
         super().__init__(strix_group)
         if r == 0:
@@ -142,7 +142,7 @@ class Fruit(pygame.sprite.Sprite):
         else:
             self.type = 'Bomb'
         self.time = time
-        self.v0 = randrange(-600, -350)
+        self.v0 = randrange(-500, -350)
         self.v1 = abs(self.v0)
         self.image = pygame.transform.scale(load_image(image, None), (100, 100))
         self.rect = self.image.get_rect().move(
@@ -155,23 +155,24 @@ class Fruit(pygame.sprite.Sprite):
     def update(self, t):
         if self.time <= t:
             t1 = t / 100 - self.time / 100
-            if self.v0 < 0:
+            if self.v0 < 0 and self.z < 490:
                 self.rect = self.image.get_rect().move(
-                    self.pos_x, self.x0 + self.v0 * t1 + 0.8 * (t1 ** 2))
+                    self.pos_x, self.x0 + self.v0 * t1 + 0.6 * (t1 ** 2))
 
-                self.z = self.x0 + self.v0 * t1 + 0.8 * (t1 ** 2)
-                self.v0 += 1.6
+                self.z = self.x0 + self.v0 * t1 + 0.6 * (t1 ** 2)
+                self.v0 += 1.2
             else:
                 self.rect = self.image.get_rect().move(
-                    self.pos_x, self.x0 - self.v0 * t1 + 0.8 * (t1 ** 2))
+                    self.pos_x, self.x0 - self.v0 * t1 + 0.6 * (t1 ** 2))
 
-                self.z = self.x0 - self.v0 * t1 + 0.8 * (t1 ** 2)
-                self.v0 -= 1.6
+                self.z = self.x0 - self.v0 * t1 + 0.6 * (t1 ** 2)
+                self.v0 -= 1.2
 
-        elif self.z > 500 or self.v0 == self.v1:
+        elif self.z > 490 or self.v0 == self.v1:
             self.image = pygame.transform.scale(load_image('w.png', None), (10, 10))
             self.rect = self.image.get_rect().move(
                 self.pos_x, 600)
+            self.type = 'F'
             self.mask = pygame.mask.from_surface(self.image)
 
     def update2(self, el1):
@@ -203,11 +204,12 @@ def ninja():
     f = open('18.txt', encoding="utf8")
     f = f.readlines()
     hero = 'Ниндзя'
+    number = 0
     for el in f:
         if el == hero:
-            number = f.index(el) + 1
+            number = f.index(el)
     font = pygame.font.Font(None, 30)
-    text_coord = 25
+    text_coord = 15
     string_rendered = font.render('', 1, pygame.Color('black'))
     intro_rect = string_rendered.get_rect()
     while running:
@@ -215,10 +217,10 @@ def ninja():
             if event.type == pygame.QUIT:
                 running = False
             if event.type == pygame.MOUSEBUTTONDOWN:
-                t += 1
-                if t < len(f):
+                number += 1
+                if number < len(f):
                     print(f[t])
-                    string_rendered = font.render(f[t], 1, pygame.Color('white'))
+                    string_rendered = font.render(f[number], 1, pygame.Color('white'))
                 else:
                     string_rendered = font.render('', 1, pygame.Color('white'))
                 intro_rect = string_rendered.get_rect()
@@ -255,8 +257,7 @@ def ninja():
         Fruit(el, randrange(0, 400), z2[g], str(el[:-4] + '1' + el[-4:]))
         g += 1
     while running:
-        y = False
-        x = False
+        lifes = 3
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 running = False
@@ -266,15 +267,20 @@ def ninja():
                     el.update2(event.pos)
 
         t += 1
+        z = 0
         screen.blit(fon, (0, 0))
-
         for el in fruit_group:
             el.update(t)
+            if el.type == 'Bombed' or el.type =='F':
+                lifes -= 1
         strix_group.update()
         strix_group.draw(screen)
         fruit_group.draw(screen)
+        x= 300
+        for i in range(lifes):
+            pygame.draw.ellipse(screen, (255, 0, 0), (x, 10, 50, 50), 0)
+            x += 75
         pygame.display.flip()
         clock.tick(100)
-
 
 ninja()
