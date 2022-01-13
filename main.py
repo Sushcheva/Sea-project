@@ -93,9 +93,9 @@ class Heroes(AnimatedSprite):
             self.rect = self.rect.move(20, 0)
         else:
             self.z += 0.2
-            if self.z >= 2.5:
+            if self.z >= 3:
                 self.image = load_image('njump1.png')
-                self.image = pygame.transform.scale(self.image, (78 * 2.5, 197 * 2.5))
+                self.image = pygame.transform.scale(self.image, (78 * 3, 197 * 3))
             else:
                 self.image = load_image('njump1.png')
                 self.image = pygame.transform.scale(self.image, (78 * self.z, 197 * self.z))
@@ -142,7 +142,7 @@ class Fruit(pygame.sprite.Sprite):
         else:
             self.type = 'Bomb'
         self.time = time
-        self.v0 = randrange(-700, -350)
+        self.v0 = randrange(-600, -350)
         self.v1 = abs(self.v0)
         self.image = pygame.transform.scale(load_image(image, None), (100, 100))
         self.rect = self.image.get_rect().move(
@@ -206,7 +206,7 @@ def ninja():
     for el in f:
         if el == hero:
             number = f.index(el) + 1
-    font = pygame.font.Font(None, 50)
+    font = pygame.font.Font(None, 30)
     text_coord = 25
     string_rendered = font.render('', 1, pygame.Color('black'))
     intro_rect = string_rendered.get_rect()
