@@ -1,5 +1,13 @@
-import pygame
 import sys
+import sqlite3
+
+from PyQt5.QtWidgets import QApplication, QPushButton, QMainWindow, \
+     QInputDialog, QLabel, QMessageBox
+from PyQt5 import QtGui  # для измениения шрифта
+from PyQt5.QtGui import QPixmap
+from PyQt5.QtWidgets import QPushButton, QApplication, QWidget, QInputDialog, QLabel
+from PyQt5 import QtGui
+from PyQt5.QtGui import QPixmap, QBrush, QPalette, QMovie, QPainter
 import os
 from random import sample, randrange, choice
 
@@ -86,6 +94,7 @@ def generate_level(level):
 def terminate():
     pygame.quit()
     sys.exit()
+
 class Camera:
     def __init__(self, field_size):
         self.dx = 0
@@ -205,29 +214,6 @@ def win_game():
         pygame.display.flip()
 
 
-class Camera:
-    def __init__(self, field_size):
-        self.dx = 0
-        self.dy = 0
-        self.field_size = field_size
-
-    # сдвинуть объект obj на смещение камеры
-    def apply(self, obj):
-        obj.rect.x += self.dx
-        if obj.rect.x < -obj.rect.width:
-            obj.rect.x += (self.field_size[0] + 1) * obj.rect.width
-        if obj.rect.x >= (self.field_size[0]) * obj.rect.width:
-            obj.rect.x += -obj.rect.width * (1 + self.field_size[0])
-        obj.rect.y += self.dy
-        if obj.rect.y < -obj.rect.height:
-            obj.rect.y += (self.field_size[1] + 1) * obj.rect.height
-        if obj.rect.y >= (self.field_size[1]) * obj.rect.height:
-            obj.rect.y += -obj.rect.height * (1 + self.field_size[1])
-
-    # позиционировать камеру на объекте target
-    def update(self, target):
-        self.dx = -(target.rect.x + target.rect.w // 2 - WIDTH // 2)
-        self.dy = -(target.rect.y + target.rect.h // 2 - HEIGHT // 2)
 
 class AnimatedSprite(pygame.sprite.Sprite):
     def __init__(self, sheet, columns, rows, x, y):
@@ -563,16 +549,7 @@ def ninja():
         pygame.display.flip()
         clock.tick(100)
 
-import sys
-import sqlite3
 
-from PyQt5.QtWidgets import QApplication, QPushButton, QMainWindow, \
-     QInputDialog, QLabel, QMessageBox
-from PyQt5 import QtGui  # для измениения шрифта
-from PyQt5.QtGui import QPixmap
-from PyQt5.QtWidgets import QPushButton, QApplication, QWidget, QInputDialog, QLabel
-from PyQt5 import QtGui
-from PyQt5.QtGui import QPixmap, QBrush, QPalette, QMovie, QPainter
 
 sp = []
 n = ' '
