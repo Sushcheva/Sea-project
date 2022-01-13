@@ -254,21 +254,17 @@ while running:
                 for el in tiles_group:
                     if player.pos_x == el.pos_x and player.pos_y == el.pos_y and el.tile_type == 'wall':
                         player.update(3)
-                for el in tiles_group:
-                    if player.pos_x == el.pos_x and player.pos_y == el.pos_y and el.tile_type == 'enemy':
+                    elif player.pos_x == el.pos_x and player.pos_y == el.pos_y and el.tile_type == 'enemy':
                         player.update(5)
-                for el in tiles_group:
-                    if player.pos_x == el.pos_x and player.pos_y == el.pos_y and el.tile_type == 'star':
+                    elif player.pos_x == el.pos_x and player.pos_y == el.pos_y and el.tile_type == 'star':
                         player.update(6)
             elif event.key == pygame.K_DOWN:
                 player.update(1)
                 for el in tiles_group:
                     if player.pos_x == el.pos_x and player.pos_y == el.pos_y and el.tile_type == 'wall':
                         player.update(2)
-                for el in tiles_group:
                     if player.pos_x == el.pos_x and player.pos_y == el.pos_y and el.tile_type == 'enemy':
                         player.update(5)
-                for el in tiles_group:
                     if player.pos_x == el.pos_x and player.pos_y == el.pos_y and el.tile_type == 'star':
                         player.update(6)
             elif event.key == pygame.K_UP:
@@ -276,10 +272,8 @@ while running:
                 for el in tiles_group:
                     if player.pos_x == el.pos_x and player.pos_y == el.pos_y and el.tile_type == 'wall':
                         player.update(1)
-                for el in tiles_group:
                     if player.pos_x == el.pos_x and player.pos_y == el.pos_y and el.tile_type == 'enemy':
                         player.update(5)
-                for el in tiles_group:
                     if player.pos_x == el.pos_x and player.pos_y == el.pos_y and el.tile_type == 'star':
                         player.update(6)
             elif event.key == pygame.K_RIGHT:
@@ -287,10 +281,8 @@ while running:
                 for el in tiles_group:
                     if player.pos_x == el.pos_x and player.pos_y == el.pos_y and el.tile_type == 'wall':
                         player.update(4)
-                for el in tiles_group:
                     if player.pos_x == el.pos_x and player.pos_y == el.pos_y and el.tile_type == 'enemy':
                         player.update(5)
-                for el in tiles_group:
                     if player.pos_x == el.pos_x and player.pos_y == el.pos_y and el.tile_type == 'star':
                         player.update(6)
 
