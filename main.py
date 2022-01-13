@@ -2,15 +2,6 @@ import pygame
 import sys
 import os
 from random import sample, randrange, choice
-import sqlite3
-
-from PyQt5.QtWidgets import QApplication, QPushButton, QMainWindow, \
-     QInputDialog, QLabel, QMessageBox
-from PyQt5 import QtGui  # для измениения шрифта
-from PyQt5.QtGui import QPixmap
-from PyQt5.QtWidgets import QPushButton, QApplication, QWidget, QInputDialog, QLabel
-from PyQt5 import QtGui
-from PyQt5.QtGui import QPixmap, QBrush, QPalette, QMovie, QPainter
 
 pygame.font.init()
 FPS = 60
@@ -102,7 +93,7 @@ class Heroes(AnimatedSprite):
             self.rect = self.rect.move(20, 0)
         else:
             self.z += 0.2
-            if self.z >= 6:
+            if self.z >= 3:
                 self.image = load_image('njump1.png')
                 self.image = pygame.transform.scale(self.image, (78 * 3, 197 * 3))
             else:
@@ -121,7 +112,7 @@ def create_particles(position, image):
 
 def ti(b):
     pygame.init()
-    size = 1000, 500
+    size = 500, 500
     screen = pygame.display.set_mode(size)
     clock = pygame.time.Clock()
     running = True
@@ -131,7 +122,7 @@ def ti(b):
         fon = pygame.transform.scale(load_image('game_over.png'), (500, 500))
     font = pygame.font.Font(None, 30)
     text_coord = 400
-    string_rendered = font.render(str('Вы набрали '+ str(b) +' баллов'), 1, pygame.Color('white'))
+    string_rendered = font.render(str('Вы набрали '+str(b)+' баллов'), 1, pygame.Color('white'))
     intro_rect = string_rendered.get_rect()
     intro_rect = string_rendered.get_rect()
     intro_rect.top = text_coord
@@ -180,21 +171,21 @@ class Fruit(pygame.sprite.Sprite):
         else:
             self.type = 'Bomb'
         self.time = time
-        self.v0 = randrange(-1000, -700)
+        self.v0 = randrange(-500, -350)
         self.v1 = abs(self.v0)
         self.image = pygame.transform.scale(load_image(image, None), (100, 100))
         self.rect = self.image.get_rect().move(
-            pos_x, 1000)
+            pos_x, 500)
         self.mask = pygame.mask.from_surface(self.image)
         self.pos_x = pos_x
-        self.x0 = 1000
+        self.x0 = 500
         self.z = 0
         self.k = False
         self.d = False
         self.pos_y = 0
 
     def update(self, t):
-        if self.z >= 999 and self.k:
+        if self.z >= 499 and self.k:
             self.d = True
 
         if self.time <= t and not self.d:
@@ -216,7 +207,7 @@ class Fruit(pygame.sprite.Sprite):
         elif self.d and self.type == 'Fruit':
             self.image = pygame.transform.scale(load_image('w.png', None), (10, 10))
             self.rect = self.image.get_rect().move(
-                self.pos_x, 1100)
+                self.pos_x, 600)
             self.type = 'F'
             self.mask = pygame.mask.from_surface(self.image)
 
@@ -238,12 +229,12 @@ class Fruit(pygame.sprite.Sprite):
 
 def ninja():
     pygame.init()
-    size = 200, 1000
+    size = 500, 500
     screen = pygame.display.set_mode(size)
     clock = pygame.time.Clock()
-    fon = pygame.transform.scale(load_image('les.png'), (1000, 1000))
+    fon = pygame.transform.scale(load_image('les.png'), (500, 500))
 
-    nindja = Heroes(load_image("njump.png"), 'nudar.png', 9, 1, 100, 100)
+    nindja = Heroes(load_image("njump.png"), 'nudar.png', 9, 1, 50, 50)
     running = True
     t = 0
     f = open('18.txt', encoding="utf8")
@@ -253,7 +244,7 @@ def ninja():
     for el in fu:
         if el == hero:
             number = fu.index(el)
-    font = pygame.font.Font(None, 40)
+    font = pygame.font.Font(None, 30)
     text_coord = 15
     string_rendered = font.render('', 1, pygame.Color('black'))
     intro_rect = string_rendered.get_rect()
@@ -299,7 +290,7 @@ def ninja():
     for i in range(50):
         z2.append(randrange(100, 2500))
     for el in z1:
-        Fruit(el, randrange(0, 900), z2[g], str(el[:-4] + '1' + el[-4:]))
+        Fruit(el, randrange(0, 400), z2[g], str(el[:-4] + '1' + el[-4:]))
         g += 1
     while running:
         lifes = 5
@@ -333,7 +324,16 @@ def ninja():
         pygame.display.flip()
         clock.tick(100)
 
+import sys
+import sqlite3
 
+from PyQt5.QtWidgets import QApplication, QPushButton, QMainWindow, \
+     QInputDialog, QLabel, QMessageBox
+from PyQt5 import QtGui  # для измениения шрифта
+from PyQt5.QtGui import QPixmap
+from PyQt5.QtWidgets import QPushButton, QApplication, QWidget, QInputDialog, QLabel
+from PyQt5 import QtGui
+from PyQt5.QtGui import QPixmap, QBrush, QPalette, QMovie, QPainter
 
 sp = []
 n = ' '
@@ -542,4 +542,6 @@ if __name__ == '__main__':
     ex = Example()
     ex.show()
     sys.exit(app.exec())
+
+
 
