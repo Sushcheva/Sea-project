@@ -245,6 +245,11 @@ tile_images = {'wall': load_image('box1.png'), 'empty': load_image('grass.png'),
                 'enemy': load_image(random.choice(d)), 'door': load_image('door.png'),
                 'star': load_image('star.png')}
 player_image = load_image('mar2.png')
+FPS = 50
+WIDTH = 900
+HEIGHT = 900
+STEP = 10
+
 
 
 class Particle(pygame.sprite.Sprite):
