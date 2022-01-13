@@ -189,6 +189,7 @@ def over_game():
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 running = False
+                terminate()
             if event.type == pygame.MOUSEBUTTONDOWN:
                 pass
         screen.blit(fon, (0, 0))
@@ -213,9 +214,11 @@ def win_game():
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 running = False
+                terminate()
             if event.type == pygame.MOUSEBUTTONDOWN:
                 pass
         screen.blit(fon, (0, 0))
+        fon.blit(string_rendered, intro_rect)
         clock.tick(8)
         pygame.display.flip()
 
