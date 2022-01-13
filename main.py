@@ -119,36 +119,6 @@ player_image = load_image('mar.png', None)
 tile_width = tile_height = 50
 
 
-class CloudsText(pygame.sprite.Sprite):
-    def __init__(self, hero):
-        super().__init__(person_group)
-        f = open('18.txt', encoding="utf8")
-        f = f.readlines()
-        self.f = f
-        self.hero = hero
-        for el in f:
-            if el == hero:
-                self.number = self.f.index(el) + 1
-        self.image = load_image('cloud.png', None)
-        self.rect = self.image.get_rect().move(
-            400, 400)
-        self.mask = pygame.mask.from_surface(self.image)
-
-    def update(self,n, screen):
-        font = pygame.font.Font(None, 30)
-        text_coord = 110
-        self.image = pygame.transform.scale(load_image('cloud.png', None), (100, 100))
-        self.rect = self.image.get_rect().move(
-            100, 100)
-        if n < len(self.f):
-            string_rendered = font.render(self.f[n], 1, pygame.Color('black'))
-        intro_rect = string_rendered.get_rect()
-        intro_rect.top = text_coord
-        intro_rect.x = 410
-        text_coord += intro_rect.height
-        screen.blit(string_rendered, intro_rect)
-
-
 class Strix(pygame.sprite.Sprite):
     def __init__(self, image, pos, time):
         super().__init__(strix_group, all_sprites)
@@ -172,7 +142,7 @@ class Fruit(pygame.sprite.Sprite):
         else:
             self.type = 'Bomb'
         self.time = time
-        self.v0 = randrange(-500, -350)
+        self.v0 = randrange(-700, -350)
         self.v1 = abs(self.v0)
         self.image = pygame.transform.scale(load_image(image, None), (100, 100))
         self.rect = self.image.get_rect().move(
@@ -226,20 +196,38 @@ def ninja():
     screen = pygame.display.set_mode(size)
     clock = pygame.time.Clock()
     fon = pygame.transform.scale(load_image('les.png'), (500, 500))
-    CloudsText('Ниндзя')
+
     nindja = Heroes(load_image("njump.png"), 'nudar.png', 9, 1, 50, 50)
     running = True
     t = 0
+    f = open('18.txt', encoding="utf8")
+    f = f.readlines()
+    hero = 'Ниндзя'
+    for el in f:
+        if el == hero:
+            number = f.index(el) + 1
+    font = pygame.font.Font(None, 50)
+    text_coord = 25
+    string_rendered = font.render('', 1, pygame.Color('black'))
+    intro_rect = string_rendered.get_rect()
     while running:
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 running = False
             if event.type == pygame.MOUSEBUTTONDOWN:
-                person_group.update(t, screen)
                 t += 1
+                if t < len(f):
+                    print(f[t])
+                    string_rendered = font.render(f[t], 1, pygame.Color('white'))
+                else:
+                    string_rendered = font.render('', 1, pygame.Color('white'))
+                intro_rect = string_rendered.get_rect()
+                intro_rect.top = text_coord
+                intro_rect.x = 25
+                text_coord += intro_rect.height
         screen.blit(fon, (0, 0))
+        fon.blit(string_rendered,intro_rect)
         all_sprites.update()
-
         clock.tick(8)
         all_sprites.draw(screen)
         person_group.draw(screen)
@@ -259,6 +247,7 @@ def ninja():
     z1 = sample(z, 50)
     g = 0
     z2 = []
+    fon = pygame.transform.scale(load_image('les.png'), (500, 500))
     lifes = 3
     for i in range(50):
         z2.append(randrange(100, 2500))
