@@ -137,6 +137,7 @@ class Example(QMainWindow):
         palette.setBrush(QPalette.Background, QBrush(QPixmap("./fon.jpg")))
         self.thorth_form.setPalette(palette)
 
+
 class Exa(QWidget):
     def __init__(self):
         super().__init__()
