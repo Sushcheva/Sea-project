@@ -285,7 +285,7 @@ class Particle(pygame.sprite.Sprite):
             self.kill()
 
 
-class Heroes(AnimatedSprite):
+class Heroes(pygame.sprite.Sprite):
     def __init__(self, sheet, image1, columns, rows, x, y):
         super().__init__(all_sprites)
         self.image1 = image1
