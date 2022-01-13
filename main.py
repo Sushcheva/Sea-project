@@ -335,7 +335,6 @@ while running:
     tiles_group.draw(screen)
 
     all_sprites.draw(screen)
-    player_group.draw(screen)
 
     pygame.display.flip()
     clock.tick(FPS)
