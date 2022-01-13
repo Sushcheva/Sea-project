@@ -1,6 +1,7 @@
 import sys
 import sqlite3
-
+import pygame
+import random
 from PyQt5.QtWidgets import QApplication, QPushButton, QMainWindow, \
      QInputDialog, QLabel, QMessageBox
 from PyQt5 import QtGui  # для измениения шрифта
@@ -11,31 +12,19 @@ from PyQt5.QtGui import QPixmap, QBrush, QPalette, QMovie, QPainter
 import os
 from random import sample, randrange, choice
 
+tile_width = tile_height = 50
 pygame.font.init()
 FPS = 60
 all_sprites = pygame.sprite.Group()
 fruit_group = pygame.sprite.Group()
 person_group = pygame.sprite.Group()
+all_sprites1 = pygame.sprite.Group()
+tiles_group = pygame.sprite.Group()
+player_group = pygame.sprite.Group()
+
 strix_group = pygame.sprite.Group()
 player = None
 screen_rect = (0, 0, 500, 500)
-
-def load_image(name, color_key=None):
-    fullname = os.path.join('data1', name)
-    try:
-        image = pygame.image.load(fullname).convert()
-        image.set_colorkey((0, 0, 0))
-    except pygame.error as message:
-        print('Cannot load image:', name)
-        raise SystemExit(message)
-
-    if color_key is not None:
-        if color_key == -1:
-            color_key = image.get_at((0, 0))
-        image.set_colorkey(color_key)
-    else:
-        image = image.convert_alpha()
-    return image
 
 
 def over_game():
@@ -58,7 +47,7 @@ def over_game():
 
 
 def load_level(filename):
-    filename = "data1/" + filename
+    filename = "data/" + filename
     # читаем уровень, убирая символы перевода строки
     with open(filename, 'r') as mapFile:
         level_map = [line.strip() for line in mapFile]
@@ -122,7 +111,7 @@ class Camera:
 
 class Tile(pygame.sprite.Sprite):
     def __init__(self, tile_type, pos_x, pos_y):
-        super().__init__(tiles_group, all_sprites)
+        super().__init__(tiles_group, all_sprites1)
         self.image = tile_images[tile_type]
         self.rect = self.image.get_rect().move(
             tile_width * pos_x, tile_height * pos_y)
@@ -134,7 +123,7 @@ class Tile(pygame.sprite.Sprite):
 class Player(pygame.sprite.Sprite):
 
     def __init__(self, pos_x, pos_y):
-        super().__init__(player_group, all_sprites)
+        super().__init__(player_group, all_sprites1)
         self.image = player_image
         self.pos_x = pos_x
         self.pos_y = pos_y
@@ -247,6 +236,16 @@ def load_image(name, colorkey=None):
     image = pygame.image.load(fullname)
     return image
 
+st = 0
+d = ['en.png', 'enn.png', 'ennn.png']
+
+
+tile_width = tile_height = 50
+tile_images = {'wall': load_image('box1.png'), 'empty': load_image('grass.png'), \
+                'enemy': load_image(random.choice(d)), 'door': load_image('door.png'),
+                'star': load_image('star.png')}
+player_image = load_image('mar2.png')
+
 
 class Particle(pygame.sprite.Sprite):
     def __init__(self, pos, dx, dy, image, r=0):
@@ -281,7 +280,7 @@ class Particle(pygame.sprite.Sprite):
             self.kill()
 
 
-class AnimatedSprite(pygame.sprite.Sprite):
+class Heroes(AnimatedSprite):
     def __init__(self, sheet, image1, columns, rows, x, y):
         super().__init__(all_sprites)
         self.image1 = image1
@@ -301,15 +300,6 @@ class AnimatedSprite(pygame.sprite.Sprite):
                 frame_location = (self.rect.w * i, self.rect.h * j)
                 self.frames.append(sheet.subsurface(pygame.Rect(
                     frame_location, self.rect.size)))
-
-    def update(self):
-        self.cur_frame = (self.cur_frame + 1) % len(self.frames)
-        self.image = self.frames[self.cur_frame]
-
-
-class Heroes(AnimatedSprite):
-    def __init__(self, sheet, image1, columns, rows, x, y):
-        super().__init__(sheet, image1, columns, rows, x, y)
 
     def update(self):
         if self.cur_frame != len(self.frames) - 1:
@@ -364,13 +354,6 @@ def ti(b):
         pygame.display.flip()
 
 
-tile_images = {
-    'wall': load_image('box.png', None),
-    'empty': load_image('grass.png', None)
-}
-player_image = load_image('mar.png', None)
-
-tile_width = tile_height = 50
 
 
 class Strix(pygame.sprite.Sprite):
@@ -746,8 +729,7 @@ class Exa(QWidget):
 
 
     def open_second_form(self):
-        st = 0
-        d = ['en.png', 'enn.png', 'ennn.png']
+
         pygame.init()
         pygame.key.set_repeat(200, 70)
 
@@ -756,17 +738,90 @@ class Exa(QWidget):
         HEIGHT = 900
         STEP = 10
 
-# Press Shift+F10 to execute it or replace it with your code.
-# Press Double Shift to search everywhere for classes, files, tool windows, actions, and settings.
+        screen = pygame.display.set_mode((WIDTH, HEIGHT))
+        clock = pygame.time.Clock()
+        player = None
+        tile_width = tile_height = 50
+        o = ['map', 'map2']
+        player, level_x, level_y = generate_level(load_level(random.choice(o)))
+        camera = Camera((level_x, level_y))
+        dragon = AnimatedSprite(load_image("enemy3.png"), 5, 2, 50, 50)
+        dragon1 = AnimatedSprite(load_image("enemy3.png"), 5, 2, 300, 50)
+        running = True
+        while running:
+            for event in pygame.event.get():
+                if event.type == pygame.QUIT:
+                    running = False
+                if event.type == pygame.KEYDOWN:
+                    if event.key == pygame.K_LEFT:
+                        player.update(4)
+                        for el in tiles_group:
+                            if player.pos_x == el.pos_x and player.pos_y == el.pos_y and el.tile_type == 'wall':
+                                player.update(3)
+                            elif player.pos_x == el.pos_x and player.pos_y == el.pos_y and el.tile_type == 'enemy':
+                                player.update(5)
+                            elif player.pos_x == el.pos_x and player.pos_y == el.pos_y and el.tile_type == 'star':
+                                player.update(6)
+                            elif player.pos_x == el.pos_x and player.pos_y == el.pos_y and el.tile_type == 'door':
+                                player.update(7)
+                    elif event.key == pygame.K_DOWN:
+                        player.update(1)
+                        for el in tiles_group:
+                            if player.pos_x == el.pos_x and player.pos_y == el.pos_y and el.tile_type == 'wall':
+                                player.update(2)
+                            if player.pos_x == el.pos_x and player.pos_y == el.pos_y and el.tile_type == 'enemy':
+                                player.update(5)
+                            if player.pos_x == el.pos_x and player.pos_y == el.pos_y and el.tile_type == 'star':
+                                player.update(6)
+                            elif player.pos_x == el.pos_x and player.pos_y == el.pos_y and el.tile_type == 'door':
+                                player.update(7)
+                    elif event.key == pygame.K_UP:
+                        player.update(2)
+                        for el in tiles_group:
+                            if player.pos_x == el.pos_x and player.pos_y == el.pos_y and el.tile_type == 'wall':
+                                player.update(1)
+                            if player.pos_x == el.pos_x and player.pos_y == el.pos_y and el.tile_type == 'enemy':
+                                player.update(5)
+                            if player.pos_x == el.pos_x and player.pos_y == el.pos_y and el.tile_type == 'star':
+                                player.update(6)
+                            elif player.pos_x == el.pos_x and player.pos_y == el.pos_y and el.tile_type == 'door':
+                                player.update(7)
+                    elif event.key == pygame.K_RIGHT:
+                        player.update(3)
+                        for el in tiles_group:
+                            if player.pos_x == el.pos_x and player.pos_y == el.pos_y and el.tile_type == 'wall':
+                                player.update(4)
+                            if player.pos_x == el.pos_x and player.pos_y == el.pos_y and el.tile_type == 'enemy':
+                                player.update(5)
+                            if player.pos_x == el.pos_x and player.pos_y == el.pos_y and el.tile_type == 'star':
+                                player.update(6)
+                            elif player.pos_x == el.pos_x and player.pos_y == el.pos_y and el.tile_type == 'door':
+                                player.update(7)
 
+            camera.update(player)
 
-def print_hi(name):
-    # Use a breakpoint in the code line below to debug your script.
-    print(f'Hi, {name}')  # Press Ctrl+F8 to toggle the breakpoint.
+            for sprite in all_sprites1:
+                camera.apply(sprite)
+            dragon.update()
+            dragon1.update()
 
+            screen.fill(pygame.Color(0, 0, 0))
+            tiles_group.draw(screen)
 
-# Press the green button in the gutter to run the script.
+            all_sprites1.draw(screen)
+            player_group.draw(screen)
+
+            pygame.display.flip()
+            clock.tick(FPS)
+
+        terminate()
+
+def e(a, b, c):
+    sys.__excepthook__(a, b, c)
+
 if __name__ == '__main__':
-    print_hi('PyCharm')
-
-# See PyCharm help at https://www.jetbrains.com/help/pycharm/
+    app = QApplication(sys.argv)
+    sys.excepthook = e
+    ex = Example()
+    ex.show()
+    sys.exit(app.exec())
