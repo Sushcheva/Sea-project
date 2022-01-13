@@ -2,6 +2,11 @@ import pygame
 import sys
 import os
 from random import sample, randrange, choice
+import sqlite3
+from PyQt5.QtWidgets import QMainWindow,  QMessageBox, QPushButton, QApplication, QWidget, QInputDialog, QLabel
+from PyQt5 import QtGui
+from PyQt5.QtGui import QPixmap, QBrush, QPalette, QMovie, QPainter
+
 
 pygame.font.init()
 FPS = 60
@@ -563,16 +568,6 @@ def ninja():
         pygame.display.flip()
         clock.tick(100)
 
-import sys
-import sqlite3
-
-from PyQt5.QtWidgets import QApplication, QPushButton, QMainWindow, \
-     QInputDialog, QLabel, QMessageBox
-from PyQt5 import QtGui  # для измениения шрифта
-from PyQt5.QtGui import QPixmap
-from PyQt5.QtWidgets import QPushButton, QApplication, QWidget, QInputDialog, QLabel
-from PyQt5 import QtGui
-from PyQt5.QtGui import QPixmap, QBrush, QPalette, QMovie, QPainter
 
 sp = []
 n = ' '
