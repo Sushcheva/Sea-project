@@ -178,6 +178,10 @@ class Player(pygame.sprite.Sprite):
             over_game()
         if event == 6:
             st += 1
+            for el in tiles_group:
+                if el.pos_x == self.pos_x and el.pos_y == self.pos_y:
+                    el.image = load_image('grass.png')
+                    el.type = 'empty'
             print(st)
 
 
