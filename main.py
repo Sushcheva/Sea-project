@@ -1,6 +1,6 @@
-import sys
 import sqlite3
 import pygame
+import sys
 import os
 import random
 
@@ -9,7 +9,7 @@ d = ['en.png', 'enn.png', 'ennn.png']
 pygame.init()
 pygame.key.set_repeat(200, 70)
 
-FPS = 1
+FPS = 50
 WIDTH = 900
 HEIGHT = 900
 STEP = 10
@@ -169,8 +169,6 @@ class Player(pygame.sprite.Sprite):
             self.pos_x -= 1
         if event == 5:
             over_game()
-        if event == 7:
-            win_game()
         if event == 6:
             st += 1
             for el in tiles_group:
@@ -196,22 +194,6 @@ def over_game():
         clock.tick(8)
         pygame.display.flip()
 
-def win_game():
-    pygame.init()
-    size = 900, 800
-    screen = pygame.display.set_mode(size)
-    clock = pygame.time.Clock()
-    running = True
-    fon = pygame.transform.scale(load_image('win.png'), (900, 800))
-    while running:
-        for event in pygame.event.get():
-            if event.type == pygame.QUIT:
-                running = False
-            if event.type == pygame.MOUSEBUTTONDOWN:
-                pass
-        screen.blit(fon, (0, 0))
-        clock.tick(8)
-        pygame.display.flip()
 
 
 o = ['map', 'map2', 'map3']
@@ -288,8 +270,6 @@ while running:
                         player.update(5)
                     elif player.pos_x == el.pos_x and player.pos_y == el.pos_y and el.tile_type == 'star':
                         player.update(6)
-                    elif player.pos_x == el.pos_x and player.pos_y == el.pos_y and el.tile_type == 'door':
-                        player.update(7)
             elif event.key == pygame.K_DOWN:
                 player.update(1)
                 for el in tiles_group:
@@ -299,8 +279,6 @@ while running:
                         player.update(5)
                     if player.pos_x == el.pos_x and player.pos_y == el.pos_y and el.tile_type == 'star':
                         player.update(6)
-                    elif player.pos_x == el.pos_x and player.pos_y == el.pos_y and el.tile_type == 'door':
-                        player.update(7)
             elif event.key == pygame.K_UP:
                 player.update(2)
                 for el in tiles_group:
@@ -310,8 +288,6 @@ while running:
                         player.update(5)
                     if player.pos_x == el.pos_x and player.pos_y == el.pos_y and el.tile_type == 'star':
                         player.update(6)
-                    elif player.pos_x == el.pos_x and player.pos_y == el.pos_y and el.tile_type == 'door':
-                        player.update(7)
             elif event.key == pygame.K_RIGHT:
                 player.update(3)
                 for el in tiles_group:
@@ -321,8 +297,6 @@ while running:
                         player.update(5)
                     if player.pos_x == el.pos_x and player.pos_y == el.pos_y and el.tile_type == 'star':
                         player.update(6)
-                    elif player.pos_x == el.pos_x and player.pos_y == el.pos_y and el.tile_type == 'door':
-                        player.update(7)
 
     camera.update(player)
 
