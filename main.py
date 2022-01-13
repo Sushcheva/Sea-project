@@ -110,13 +110,16 @@ def create_particles(position, image):
         Particle(position, choice(numbers), choice(numbers), image)
 
 
-def ti():
+def ti(b):
     pygame.init()
     size = 500, 500
     screen = pygame.display.set_mode(size)
     clock = pygame.time.Clock()
     running = True
-    fon = pygame.transform.scale(load_image('game_over.png'), (500, 500))
+    if b:
+        fon = pygame.transform.scale(load_image('game_over.png'), (500, 500))
+    else:
+        fon = pygame.transform.scale(load_image('victory.png'), (500, 500))
     while running:
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
