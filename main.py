@@ -202,6 +202,13 @@ def win_game():
     clock = pygame.time.Clock()
     running = True
     fon = pygame.transform.scale(load_image('win.png'), (900, 800))
+    font = pygame.font.Font(None, 30)
+    text_coord = 300
+    string_rendered = font.render(str('Вы набрали '+str(st)+' баллов'), 1, pygame.Color('white'))
+    intro_rect = string_rendered.get_rect()
+    intro_rect = string_rendered.get_rect()
+    intro_rect.top = text_coord
+    intro_rect.x = 910
     while running:
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
