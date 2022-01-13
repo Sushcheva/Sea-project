@@ -12,7 +12,7 @@ from PyQt5.QtWidgets import QPushButton, QApplication, QWidget, QInputDialog, QL
 from PyQt5 import QtGui
 from PyQt5.QtGui import QPixmap, QBrush, QPalette, QMovie, QPainter
 st = 0
-
+d = ['en.png', 'enn.png', 'ennn.png']
 pygame.init()
 pygame.key.set_repeat(200, 70)
 
@@ -105,7 +105,7 @@ def terminate():
     pygame.quit()
     sys.exit()
 
-tile_images = {'wall': load_image('box1.png'), 'empty': load_image('grass.png'), 'enemy': load_image('en.png'), \
+tile_images = {'wall': load_image('box1.png'), 'empty': load_image('grass.png'), 'enemy': load_image(random.choice(d)), \
                'star': load_image('star.png')}
 player_image = load_image('mar2.png')
 
@@ -178,7 +178,6 @@ class Player(pygame.sprite.Sprite):
             over_game()
         if event == 6:
             st += 1
-            el.image
             print(st)
 
 
