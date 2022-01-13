@@ -155,7 +155,7 @@ class Fruit(pygame.sprite.Sprite):
     def update(self, t):
         if self.time <= t:
             t1 = t / 100 - self.time / 100
-            if self.v0 < 0 and self.z < 490:
+            if self.v0 < 0:
                 self.rect = self.image.get_rect().move(
                     self.pos_x, self.x0 + self.v0 * t1 + 0.6 * (t1 ** 2))
 
