@@ -130,6 +130,9 @@ class Example(QMainWindow):
         self.hide()
         self.thorth_form.show()
         self.thorth_form.showFullScreen()
+        palette = QPalette()
+        palette.setBrush(QPalette.Background, QBrush(QPixmap("./fon.jpg")))
+        self.thorth_form.setPalette(palette)
 
 class Exa(QWidget):
     def __init__(self):
