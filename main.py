@@ -357,6 +357,8 @@ def ti(b):
         fon.blit(string_rendered,intro_rect)
         clock.tick(8)
         pygame.display.flip()
+    pygame.quit()
+    sys.exit()
 
 
 
