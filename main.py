@@ -109,6 +109,22 @@ def create_particles(position, image):
     for _ in range(particle_count):
         Particle(position, choice(numbers), choice(numbers), image)
 
+def t():
+    pygame.init()
+    size = 500, 500
+    screen = pygame.display.set_mode(size)
+    clock = pygame.time.Clock()
+    running = True
+    fon = pygame.transform.scale(load_image('game_over.png'), (500, 500))
+    while running:
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                running = False
+            if event.type == pygame.MOUSEBUTTONDOWN:
+
+        screen.blit(fon, (0, 0))
+        clock.tick(8)
+        pygame.display.flip()
 
 tile_images = {
     'wall': load_image('box.png', None),
@@ -151,24 +167,31 @@ class Fruit(pygame.sprite.Sprite):
         self.pos_x = pos_x
         self.x0 = 500
         self.z = 0
+        self.k = False
+        self.d =False
+        self.pos_y = 0
 
     def update(self, t):
-        if self.time <= t:
+        if self.z >= 499  and self.k:
+            self.d =True
+
+        if self.time <= t and not (self.d):
             t1 = t / 100 - self.time / 100
             if self.v0 < 0:
                 self.rect = self.image.get_rect().move(
                     self.pos_x, self.x0 + self.v0 * t1 + 0.6 * (t1 ** 2))
-
-                self.z = self.x0 + self.v0 * t1 + 0.6 * (t1 ** 2)
+                self.pos_y = self.x0 + self.v0 * t1 + 0.6 * (t1 ** 2)
+                self.z += self.x0 + self.v0 * t1 + 0.6 * (t1 ** 2)
                 self.v0 += 1.2
             else:
+                self.k = True
                 self.rect = self.image.get_rect().move(
                     self.pos_x, self.x0 - self.v0 * t1 + 0.6 * (t1 ** 2))
-
-                self.z = self.x0 - self.v0 * t1 + 0.6 * (t1 ** 2)
+                self.pos_y = self.x0 - self.v0 * t1 + 0.6 * (t1 ** 2)
+                self.z += self.x0 - self.v0 * t1 + 0.6 * (t1 ** 2)
                 self.v0 -= 1.2
 
-        elif self.z > 490 or self.v0 == self.v1:
+        elif self.d and self.type == 'Fruit':
             self.image = pygame.transform.scale(load_image('w.png', None), (10, 10))
             self.rect = self.image.get_rect().move(
                 self.pos_x, 600)
@@ -176,7 +199,7 @@ class Fruit(pygame.sprite.Sprite):
             self.mask = pygame.mask.from_surface(self.image)
 
     def update2(self, el1):
-        if self.pos_x <= el1[0] <= self.pos_x + 100 and self.z <= el1[1] <= self.z + 100:
+        if self.pos_x <= el1[0] <= self.pos_x + 75 and self.pos_y <= el1[1] <= self.pos_y + 100:
             self.image = pygame.transform.scale(load_image('w.png', None), (100, 100))
             if self.type == 'Fruit':
                 Strix('br.png', el1, 1)
@@ -250,14 +273,13 @@ def ninja():
     g = 0
     z2 = []
     fon = pygame.transform.scale(load_image('les.png'), (500, 500))
-    lifes = 3
     for i in range(50):
         z2.append(randrange(100, 2500))
     for el in z1:
         Fruit(el, randrange(0, 400), z2[g], str(el[:-4] + '1' + el[-4:]))
         g += 1
     while running:
-        lifes = 3
+        lifes = 5
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 running = False
@@ -265,7 +287,6 @@ def ninja():
                 Strix('pt.png', event.pos, t)
                 for el in fruit_group:
                     el.update2(event.pos)
-
         t += 1
         z = 0
         screen.blit(fon, (0, 0))
@@ -276,10 +297,12 @@ def ninja():
         strix_group.update()
         strix_group.draw(screen)
         fruit_group.draw(screen)
-        x= 300
+        x = 100
         for i in range(lifes):
             pygame.draw.ellipse(screen, (255, 0, 0), (x, 10, 50, 50), 0)
             x += 75
+        if lifes <= 0:
+             t
         pygame.display.flip()
         clock.tick(100)
 
