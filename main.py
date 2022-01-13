@@ -112,14 +112,14 @@ def create_particles(position, image):
 
 def ti(b):
     pygame.init()
-    size = 500, 500
+    size = 2000, 1000
     screen = pygame.display.set_mode(size)
     clock = pygame.time.Clock()
     running = True
     if b:
-        fon = pygame.transform.scale(load_image('victory.png'), (500, 500))
+        fon = pygame.transform.scale(load_image('victory.png'), (2000, 1000))
     else:
-        fon = pygame.transform.scale(load_image('game_over.png'), (500, 500))
+        fon = pygame.transform.scale(load_image('game_over.png'), (2000, 1000))
     font = pygame.font.Font(None, 30)
     text_coord = 400
     string_rendered = font.render(str('Вы набрали '+str(b)+' баллов'), 1, pygame.Color('white'))
@@ -153,7 +153,7 @@ class Strix(pygame.sprite.Sprite):
         super().__init__(strix_group, all_sprites)
         self.time = time
         self.t = 200
-        self.image = pygame.transform.scale(load_image(image, None), (100, 100))
+        self.image = pygame.transform.scale(load_image(image, None), (150, 150))
         self.rect = self.image.get_rect().move(
             pos[0] - 50, pos[1] - 50)
         self.mask = pygame.mask.from_surface(self.image)
@@ -171,9 +171,9 @@ class Fruit(pygame.sprite.Sprite):
         else:
             self.type = 'Bomb'
         self.time = time
-        self.v0 = randrange(-500, -350)
+        self.v0 = randrange(-700, -450)
         self.v1 = abs(self.v0)
-        self.image = pygame.transform.scale(load_image(image, None), (100, 100))
+        self.image = pygame.transform.scale(load_image(image, None), (150, 150))
         self.rect = self.image.get_rect().move(
             pos_x, 500)
         self.mask = pygame.mask.from_surface(self.image)
