@@ -238,7 +238,7 @@ class Fruit(pygame.sprite.Sprite):
 
 def ninja():
     pygame.init()
-    size = 1000, 1000
+    size = 200, 1000
     screen = pygame.display.set_mode(size)
     clock = pygame.time.Clock()
     fon = pygame.transform.scale(load_image('les.png'), (1000, 1000))
