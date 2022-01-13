@@ -203,12 +203,14 @@ class Exa(QWidget):
             self.label2.adjustSize()
             self.button_2.hide()
             self.button_1.hide()
-            self.open_second_form()
+            self.open_another_form()
 
 
     def open_second_form(self):
         pass
 
+    def open_another_form(self):
+        pass
 
 pygame.init()
 pygame.key.set_repeat(200, 70)
