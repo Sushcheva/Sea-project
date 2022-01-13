@@ -117,9 +117,16 @@ def ti(b):
     clock = pygame.time.Clock()
     running = True
     if b:
-        fon = pygame.transform.scale(load_image('game_over.png'), (500, 500))
-    else:
         fon = pygame.transform.scale(load_image('victory.png'), (500, 500))
+    else:
+        fon = pygame.transform.scale(load_image('game_over.png'), (500, 500))
+    font = pygame.font.Font(None, 30)
+    text_coord = 400
+    string_rendered = font.render(str('Вы набрали '+str(b)+' баллов'), 1, pygame.Color('white'))
+    intro_rect = string_rendered.get_rect()
+    intro_rect = string_rendered.get_rect()
+    intro_rect.top = text_coord
+    intro_rect.x = 25
     while running:
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
@@ -127,6 +134,7 @@ def ti(b):
             if event.type == pygame.MOUSEBUTTONDOWN:
                 ninja()
         screen.blit(fon, (0, 0))
+        fon.blit(string_rendered,intro_rect)
         clock.tick(8)
         pygame.display.flip()
 
@@ -295,11 +303,14 @@ def ninja():
                     el.update2(event.pos)
         t += 1
         z = 0
+        s = 0
         screen.blit(fon, (0, 0))
         for el in fruit_group:
             el.update(t)
             if el.type == 'Bombed' or el.type == 'F':
                 lifes -= 1
+            if el.type == 'Cut':
+                s += 1
         strix_group.update()
         strix_group.draw(screen)
         fruit_group.draw(screen)
@@ -307,8 +318,8 @@ def ninja():
         for i in range(lifes):
             pygame.draw.ellipse(screen, (255, 0, 0), (x, 10, 50, 50), 0)
             x += 75
-        if lifes <= 0:
-            ti()
+        if lifes <= 0 or t >= 3000:
+            ti(s)
             running = False
         pygame.display.flip()
         clock.tick(100)
