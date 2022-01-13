@@ -109,7 +109,8 @@ def create_particles(position, image):
     for _ in range(particle_count):
         Particle(position, choice(numbers), choice(numbers), image)
 
-def t():
+
+def ti():
     pygame.init()
     size = 500, 500
     screen = pygame.display.set_mode(size)
@@ -121,10 +122,11 @@ def t():
             if event.type == pygame.QUIT:
                 running = False
             if event.type == pygame.MOUSEBUTTONDOWN:
-
+                ninja()
         screen.blit(fon, (0, 0))
         clock.tick(8)
         pygame.display.flip()
+
 
 tile_images = {
     'wall': load_image('box.png', None),
@@ -151,7 +153,7 @@ class Strix(pygame.sprite.Sprite):
 
 class Fruit(pygame.sprite.Sprite):
     def __init__(self, image, pos_x, time, image1):
-        super().__init__(fruit_group, all_sprites)
+        super().__init__(fruit_group)
         self.image1 = image1
         if image != 'bomb.png':
             self.type = 'Fruit'
@@ -168,14 +170,14 @@ class Fruit(pygame.sprite.Sprite):
         self.x0 = 500
         self.z = 0
         self.k = False
-        self.d =False
+        self.d = False
         self.pos_y = 0
 
     def update(self, t):
-        if self.z >= 499  and self.k:
-            self.d =True
+        if self.z >= 499 and self.k:
+            self.d = True
 
-        if self.time <= t and not (self.d):
+        if self.time <= t and not self.d:
             t1 = t / 100 - self.time / 100
             if self.v0 < 0:
                 self.rect = self.image.get_rect().move(
@@ -225,12 +227,12 @@ def ninja():
     running = True
     t = 0
     f = open('18.txt', encoding="utf8")
-    f = f.readlines()
+    fu = f.readlines()
     hero = 'Ниндзя'
     number = 0
-    for el in f:
+    for el in fu:
         if el == hero:
-            number = f.index(el)
+            number = fu.index(el)
     font = pygame.font.Font(None, 30)
     text_coord = 15
     string_rendered = font.render('', 1, pygame.Color('black'))
@@ -241,9 +243,9 @@ def ninja():
                 running = False
             if event.type == pygame.MOUSEBUTTONDOWN:
                 number += 1
-                if number < len(f):
-                    print(f[t])
-                    string_rendered = font.render(f[number], 1, pygame.Color('white'))
+                if number < len(fu):
+                    print(fu[t])
+                    string_rendered = font.render(fu[number], 1, pygame.Color('white'))
                 else:
                     string_rendered = font.render('', 1, pygame.Color('white'))
                 intro_rect = string_rendered.get_rect()
@@ -251,7 +253,7 @@ def ninja():
                 intro_rect.x = 25
                 text_coord += intro_rect.height
         screen.blit(fon, (0, 0))
-        fon.blit(string_rendered,intro_rect)
+        fon.blit(string_rendered, intro_rect)
         all_sprites.update()
         clock.tick(8)
         all_sprites.draw(screen)
@@ -269,6 +271,7 @@ def ninja():
          'pear.png', 'pineapple.png', 'pineapple.png', 'pineapple.png', 'strawberry.png',
          'strawberry.png', 'strawberry.png', 'bomb.png', 'bomb.png', 'bomb.png', 'bomb.png', 'bomb.png', 'bomb.png']
     t = 0
+    f.close()
     z1 = sample(z, 50)
     g = 0
     z2 = []
@@ -292,7 +295,7 @@ def ninja():
         screen.blit(fon, (0, 0))
         for el in fruit_group:
             el.update(t)
-            if el.type == 'Bombed' or el.type =='F':
+            if el.type == 'Bombed' or el.type == 'F':
                 lifes -= 1
         strix_group.update()
         strix_group.draw(screen)
@@ -302,8 +305,10 @@ def ninja():
             pygame.draw.ellipse(screen, (255, 0, 0), (x, 10, 50, 50), 0)
             x += 75
         if lifes <= 0:
-             t
+            ti()
+            running = False
         pygame.display.flip()
         clock.tick(100)
+
 
 ninja()
