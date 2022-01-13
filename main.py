@@ -181,7 +181,7 @@ class Player(pygame.sprite.Sprite):
             for el in tiles_group:
                 if el.pos_x == self.pos_x and el.pos_y == self.pos_y:
                     el.image = load_image('grass.png')
-                    el.type = 'empty'
+                    el.tile_type = 'empty'
             print(st)
 
 
