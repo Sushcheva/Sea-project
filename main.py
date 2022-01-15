@@ -1,5 +1,14 @@
-import pygame
 import sys
+import sqlite3
+import pygame
+import random
+from PyQt5.QtWidgets import QApplication, QPushButton, QMainWindow, \
+     QInputDialog, QLabel, QMessageBox
+from PyQt5 import QtGui  # для измениения шрифта
+from PyQt5.QtGui import QPixmap
+from PyQt5.QtWidgets import QPushButton, QApplication, QWidget, QInputDialog, QLabel
+from PyQt5 import QtGui
+from PyQt5.QtGui import QPixmap, QBrush, QPalette, QMovie, QPainter
 import os
 from random import sample, randrange, choice
 import sqlite3
@@ -8,31 +17,19 @@ from PyQt5 import QtGui
 from PyQt5.QtGui import QPixmap, QBrush, QPalette, QMovie, QPainter
 
 
+tile_width = tile_height = 50
 pygame.font.init()
 FPS = 60
 all_sprites = pygame.sprite.Group()
 fruit_group = pygame.sprite.Group()
 person_group = pygame.sprite.Group()
+all_sprites1 = pygame.sprite.Group()
+tiles_group = pygame.sprite.Group()
+player_group = pygame.sprite.Group()
+
 strix_group = pygame.sprite.Group()
 player = None
 screen_rect = (0, 0, 500, 500)
-
-def load_image(name, color_key=None):
-    fullname = os.path.join('data1', name)
-    try:
-        image = pygame.image.load(fullname).convert()
-        image.set_colorkey((0, 0, 0))
-    except pygame.error as message:
-        print('Cannot load image:', name)
-        raise SystemExit(message)
-
-    if color_key is not None:
-        if color_key == -1:
-            color_key = image.get_at((0, 0))
-        image.set_colorkey(color_key)
-    else:
-        image = image.convert_alpha()
-    return image
 
 
 def over_game():
@@ -55,7 +52,7 @@ def over_game():
 
 
 def load_level(filename):
-    filename = "data1/" + filename
+    filename = "data/" + filename
     # читаем уровень, убирая символы перевода строки
     with open(filename, 'r') as mapFile:
         level_map = [line.strip() for line in mapFile]
@@ -91,6 +88,7 @@ def generate_level(level):
 def terminate():
     pygame.quit()
     sys.exit()
+
 class Camera:
     def __init__(self, field_size):
         self.dx = 0
@@ -118,7 +116,7 @@ class Camera:
 
 class Tile(pygame.sprite.Sprite):
     def __init__(self, tile_type, pos_x, pos_y):
-        super().__init__(tiles_group, all_sprites)
+        super().__init__(tiles_group, all_sprites1)
         self.image = tile_images[tile_type]
         self.rect = self.image.get_rect().move(
             tile_width * pos_x, tile_height * pos_y)
@@ -130,7 +128,7 @@ class Tile(pygame.sprite.Sprite):
 class Player(pygame.sprite.Sprite):
 
     def __init__(self, pos_x, pos_y):
-        super().__init__(player_group, all_sprites)
+        super().__init__(player_group, all_sprites1)
         self.image = player_image
         self.pos_x = pos_x
         self.pos_y = pos_y
@@ -210,29 +208,6 @@ def win_game():
         pygame.display.flip()
 
 
-class Camera:
-    def __init__(self, field_size):
-        self.dx = 0
-        self.dy = 0
-        self.field_size = field_size
-
-    # сдвинуть объект obj на смещение камеры
-    def apply(self, obj):
-        obj.rect.x += self.dx
-        if obj.rect.x < -obj.rect.width:
-            obj.rect.x += (self.field_size[0] + 1) * obj.rect.width
-        if obj.rect.x >= (self.field_size[0]) * obj.rect.width:
-            obj.rect.x += -obj.rect.width * (1 + self.field_size[0])
-        obj.rect.y += self.dy
-        if obj.rect.y < -obj.rect.height:
-            obj.rect.y += (self.field_size[1] + 1) * obj.rect.height
-        if obj.rect.y >= (self.field_size[1]) * obj.rect.height:
-            obj.rect.y += -obj.rect.height * (1 + self.field_size[1])
-
-    # позиционировать камеру на объекте target
-    def update(self, target):
-        self.dx = -(target.rect.x + target.rect.w // 2 - WIDTH // 2)
-        self.dy = -(target.rect.y + target.rect.h // 2 - HEIGHT // 2)
 
 class AnimatedSprite(pygame.sprite.Sprite):
     def __init__(self, sheet, columns, rows, x, y):
@@ -265,6 +240,21 @@ def load_image(name, colorkey=None):
         sys.exit()
     image = pygame.image.load(fullname)
     return image
+
+st = 0
+d = ['en.png', 'enn.png', 'ennn.png']
+
+
+tile_width = tile_height = 50
+tile_images = {'wall': load_image('box1.png'), 'empty': load_image('grass.png'), \
+                'enemy': load_image(random.choice(d)), 'door': load_image('door.png'),
+                'star': load_image('star.png')}
+player_image = load_image('mar2.png')
+FPS = 50
+WIDTH = 900
+HEIGHT = 900
+STEP = 10
+
 
 
 class Particle(pygame.sprite.Sprite):
@@ -300,7 +290,7 @@ class Particle(pygame.sprite.Sprite):
             self.kill()
 
 
-class AnimatedSprite(pygame.sprite.Sprite):
+class Heroes(pygame.sprite.Sprite):
     def __init__(self, sheet, image1, columns, rows, x, y):
         super().__init__(all_sprites)
         self.image1 = image1
@@ -320,15 +310,6 @@ class AnimatedSprite(pygame.sprite.Sprite):
                 frame_location = (self.rect.w * i, self.rect.h * j)
                 self.frames.append(sheet.subsurface(pygame.Rect(
                     frame_location, self.rect.size)))
-
-    def update(self):
-        self.cur_frame = (self.cur_frame + 1) % len(self.frames)
-        self.image = self.frames[self.cur_frame]
-
-
-class Heroes(AnimatedSprite):
-    def __init__(self, sheet, image1, columns, rows, x, y):
-        super().__init__(sheet, image1, columns, rows, x, y)
 
     def update(self):
         if self.cur_frame != len(self.frames) - 1:
@@ -383,13 +364,6 @@ def ti(b):
         pygame.display.flip()
 
 
-tile_images = {
-    'wall': load_image('box.png', None),
-    'empty': load_image('grass.png', None)
-}
-player_image = load_image('mar.png', None)
-
-tile_width = tile_height = 50
 
 
 class Strix(pygame.sprite.Sprite):
@@ -568,6 +542,10 @@ def ninja():
         pygame.display.flip()
         clock.tick(100)
 
+<<<<<<< HEAD
+=======
+
+>>>>>>> origin/nindja
 
 sp = []
 n = ' '
@@ -764,8 +742,7 @@ class Exa(QWidget):
 
 
     def open_second_form(self):
-        st = 0
-        d = ['en.png', 'enn.png', 'ennn.png']
+
         pygame.init()
         pygame.key.set_repeat(200, 70)
 
@@ -776,16 +753,7 @@ class Exa(QWidget):
 
         screen = pygame.display.set_mode((WIDTH, HEIGHT))
         clock = pygame.time.Clock()
-
         player = None
-        all_sprites = pygame.sprite.Group()
-        tiles_group = pygame.sprite.Group()
-        player_group = pygame.sprite.Group()
-        tile_images = {'wall': load_image('box1.png'), 'empty': load_image('grass.png'), \
-                       'enemy': load_image(random.choice(d)), 'door': load_image('door.png'),
-                       'star': load_image('star.png')}
-        player_image = load_image('mar2.png')
-
         tile_width = tile_height = 50
         o = ['map', 'map2']
         player, level_x, level_y = generate_level(load_level(random.choice(o)))
@@ -845,7 +813,7 @@ class Exa(QWidget):
 
             camera.update(player)
 
-            for sprite in all_sprites:
+            for sprite in all_sprites1:
                 camera.apply(sprite)
             dragon.update()
             dragon1.update()
@@ -853,14 +821,13 @@ class Exa(QWidget):
             screen.fill(pygame.Color(0, 0, 0))
             tiles_group.draw(screen)
 
-            all_sprites.draw(screen)
+            all_sprites1.draw(screen)
             player_group.draw(screen)
 
             pygame.display.flip()
             clock.tick(FPS)
 
         terminate()
-
 
 def e(a, b, c):
     sys.__excepthook__(a, b, c)
