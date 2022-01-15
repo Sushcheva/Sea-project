@@ -2,13 +2,6 @@ import sys
 import sqlite3
 import pygame
 import random
-from PyQt5.QtWidgets import QApplication, QPushButton, QMainWindow, \
-     QInputDialog, QLabel, QMessageBox
-from PyQt5 import QtGui  # для измениения шрифта
-from PyQt5.QtGui import QPixmap
-from PyQt5.QtWidgets import QPushButton, QApplication, QWidget, QInputDialog, QLabel
-from PyQt5 import QtGui
-from PyQt5.QtGui import QPixmap, QBrush, QPalette, QMovie, QPainter
 import os
 from random import sample, randrange, choice
 import sqlite3
