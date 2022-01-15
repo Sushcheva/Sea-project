@@ -542,11 +542,6 @@ def ninja():
         pygame.display.flip()
         clock.tick(100)
 
-<<<<<<< HEAD
-=======
-
->>>>>>> origin/nindja
-
 sp = []
 n = ' '
 a = ' '
