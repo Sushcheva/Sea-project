@@ -4,10 +4,9 @@ import pygame
 import random
 import os
 from random import sample, randrange, choice
-from PyQt5.QtWidgets import QMainWindow,  QMessageBox, QPushButton, QApplication, QWidget, QInputDialog, QLabel
+from PyQt5.QtWidgets import QMainWindow, QMessageBox, QPushButton, QApplication, QWidget, QInputDialog, QLabel
 from PyQt5 import QtGui
 from PyQt5.QtGui import QPixmap, QBrush, QPalette, QMovie, QPainter
-
 
 tile_width = tile_height = 50
 pygame.font.init()
@@ -64,6 +63,7 @@ def generate_level(level):
 def terminate():
     pygame.quit()
     sys.exit()
+
 
 class Camera:
     def __init__(self, field_size):
@@ -139,6 +139,7 @@ class Player(pygame.sprite.Sprite):
                     el.tile_type = 'empty'
             print(st)
 
+
 def over_game():
     pygame.init()
     size = 900, 800
@@ -162,7 +163,7 @@ def over_game():
         screen.blit(fon, (0, 0))
         clock.tick(8)
         pygame.display.flip()
-        fon.blit(string_rendered,intro_rect)
+        fon.blit(string_rendered, intro_rect)
 
 
 def win_game():
@@ -172,7 +173,7 @@ def win_game():
     clock = pygame.time.Clock()
     con = sqlite3.connect("base55.db")
     cur = con.cursor()
-    info = cur.execute(f"SELECT stars FROM person WHERE name ==? AND age == ?", (n,a))
+    info = cur.execute(f"SELECT stars FROM person WHERE name ==? AND age == ?", (n, a))
     if info.fetchone() is None:
         f"INSERT INTO person(stars)"
         f" VALUES('{st}')"
@@ -198,7 +199,6 @@ def win_game():
         fon.blit(string_rendered, intro_rect)
         clock.tick(8)
         pygame.display.flip()
-
 
 
 class AnimatedSprite(pygame.sprite.Sprite):
@@ -234,17 +234,15 @@ def load_image(name, colorkey=None):
     return image
 
 
-
 tile_width = tile_height = 50
 tile_images = {'wall': load_image('box1.png'), 'empty': load_image('grass.png'), \
-                'enemy': load_image(random.choice(d)), 'door': load_image('door.png'),
-                'star': load_image('star.png')}
+               'enemy': load_image(random.choice(d)), 'door': load_image('door.png'),
+               'star': load_image('star.png')}
 player_image = load_image('mar2.png')
 FPS = 50
 WIDTH = 900
 HEIGHT = 900
 STEP = 10
-
 
 
 class Particle(pygame.sprite.Sprite):
@@ -282,7 +280,7 @@ class Particle(pygame.sprite.Sprite):
 
 class Heroes(pygame.sprite.Sprite):
     def __init__(self, sheet, image1, columns, rows, x, y):
-        super().__init__(all_sprites)
+        super().__init__(all_sprites, all_sprites1)
         self.image1 = image1
         self.z = 1
         self.frames = []
@@ -315,6 +313,10 @@ class Heroes(pygame.sprite.Sprite):
                 self.image = load_image('njump1.png')
                 self.image = pygame.transform.scale(self.image, (78 * self.z, 197 * self.z))
 
+    def update1(self):
+        self.cur_frame = (self.cur_frame + 1) % len(self.frames)
+        self.image = self.frames[self.cur_frame]
+
 
 def create_particles(position, image):
     # количество создаваемых частиц
@@ -337,7 +339,7 @@ def ti(b, r=False):
         fon = pygame.transform.scale(load_image('game_over.png'), (500, 500))
     font = pygame.font.Font(None, 30)
     text_coord = 400
-    string_rendered = font.render(str('Вы набрали '+str(b)+' баллов'), 1, pygame.Color('white'))
+    string_rendered = font.render(str('Вы набрали ' + str(b) + ' баллов'), 1, pygame.Color('white'))
     intro_rect = string_rendered.get_rect()
     intro_rect = string_rendered.get_rect()
     intro_rect.top = text_coord
@@ -349,12 +351,10 @@ def ti(b, r=False):
             if event.type == pygame.MOUSEBUTTONDOWN:
                 ninja()
         screen.blit(fon, (0, 0))
-        fon.blit(string_rendered,intro_rect)
+        fon.blit(string_rendered, intro_rect)
         clock.tick(8)
         pygame.display.flip()
     pygame.quit()
-
-
 
 
 class Strix(pygame.sprite.Sprite):
@@ -539,6 +539,7 @@ def ninja():
         pygame.display.flip()
         clock.tick(100)
 
+
 sp = []
 n = ' '
 a = ' '
@@ -661,6 +662,7 @@ class Example(QMainWindow):
         palette.setBrush(QPalette.Background, QBrush(QPixmap("./fon.jpg")))
         self.thorth_form.setPalette(palette)
 
+
 class Exa(QWidget):
     def __init__(self):
         super().__init__()
@@ -727,7 +729,6 @@ class Exa(QWidget):
 
             self.open_second_form()
 
-
     def open_second_form(self):
         pygame.init()
         pygame.key.set_repeat(200, 70)
@@ -744,8 +745,8 @@ class Exa(QWidget):
         o = ['map', 'map2']
         player, level_x, level_y = generate_level(load_level(random.choice(o)))
         camera = Camera((level_x, level_y))
-        dragon = AnimatedSprite(load_image("enemy3.png"), 5, 2, 50, 50)
-        dragon1 = AnimatedSprite(load_image("enemy3.png"), 5, 2, 300, 50)
+        dragon = Heroes(load_image("enemy3.png"), load_image("enemy3.png"), 5, 2, 50, 50)
+        dragon1 = Heroes(load_image("enemy3.png"), load_image("enemy3.png"), 5, 2, 300, 50)
         running = True
         while running:
             for event in pygame.event.get():
@@ -801,8 +802,8 @@ class Exa(QWidget):
 
             for sprite in all_sprites1:
                 camera.apply(sprite)
-            dragon.update()
-            dragon1.update()
+            dragon.update1()
+            dragon1.update1()
 
             screen.fill(pygame.Color(0, 0, 0))
             tiles_group.draw(screen)
@@ -815,8 +816,10 @@ class Exa(QWidget):
 
         terminate()
 
+
 def e(a, b, c):
     sys.__excepthook__(a, b, c)
+
 
 if __name__ == '__main__':
     app = QApplication(sys.argv)
@@ -827,4 +830,3 @@ if __name__ == '__main__':
     palette.setBrush(QPalette.Background, QBrush(QPixmap("./fondb.png")))
     ex.setPalette(palette)
     sys.exit(app.exec())
-
