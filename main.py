@@ -172,7 +172,7 @@ def win_game():
     clock = pygame.time.Clock()
     con = sqlite3.connect("base55.db")
     cur = con.cursor()
-    info = cur.execute(f"SELECT stars FROM person WHERE name =='{n} AND age == '{a}'")
+    info = cur.execute(f"SELECT stars FROM person WHERE name ==? AND age == ?", (n,a))
     if info.fetchone() is None:
         f"INSERT INTO person(stars)"
         f" VALUES('{st}')"
