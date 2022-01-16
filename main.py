@@ -153,7 +153,7 @@ def over_game():
     intro_rect = string_rendered.get_rect()
     intro_rect.top = text_coord
     intro_rect.x = 25
-    fon = pygame.transform.scale(load_image('game_over.png'), (900, 800))
+    fon = pygame.transform.scale(load_image('win1.png'), (900, 800))
     while running:
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
@@ -289,6 +289,7 @@ class Heroes(pygame.sprite.Sprite):
         self.cur_frame = 0
         self.image = self.frames[self.cur_frame]
         self.rect = self.rect.move(x, y)
+        self.mask = pygame.mask.from_surface(self.image)
 
     def cut_sheet(self, sheet, columns, rows):
         self.rect = pygame.Rect(0, 0, sheet.get_width() // columns,
@@ -313,10 +314,11 @@ class Heroes(pygame.sprite.Sprite):
                 self.image = load_image('njump1.png')
                 self.image = pygame.transform.scale(self.image, (78 * self.z, 197 * self.z))
 
-    def update1(self):
+    def update1(self, player):
         self.cur_frame = (self.cur_frame + 1) % len(self.frames)
         self.image = self.frames[self.cur_frame]
-
+        if  pygame.sprite.collide_mask(self, player):
+            over_game()
 
 def create_particles(position, image):
     # количество создаваемых частиц
@@ -752,7 +754,7 @@ class Exa(QWidget):
         player, level_x, level_y = generate_level(load_level(random.choice(o)))
         camera = Camera((level_x, level_y))
         dragon = Heroes(load_image("enemy3.png"), load_image("enemy3.png"), 5, 2, 50, 50)
-        dragon1 = Heroes(load_image("enemy3.png"), load_image("enemy3.png"), 5, 2, 350, 50)
+        dragon1 = Heroes(load_image("enemy3.png"), load_image("enemy3.png"), 5, 2, 340, 50)
         running = True
         while running:
             for event in pygame.event.get():
@@ -808,8 +810,8 @@ class Exa(QWidget):
 
             for sprite in all_sprites1:
                 camera.apply(sprite)
-            dragon.update1()
-            dragon1.update1()
+            dragon.update1(player)
+            dragon1.update1(player)
 
             screen.fill(pygame.Color(0, 0, 0))
             tiles_group.draw(screen)
