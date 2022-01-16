@@ -536,7 +536,8 @@ def ninja():
         elif t >= 3000:
             ti(s, True)
             running = False
-        pygame.display.flip()
+        if running == True:
+            pygame.display.flip()
         clock.tick(100)
     pygame.quit()
 
