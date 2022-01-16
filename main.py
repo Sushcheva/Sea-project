@@ -325,13 +325,13 @@ def create_particles(position, image):
         Particle(position, choice(numbers), choice(numbers), image)
 
 
-def ti(b):
+def ti(b, r=False):
     pygame.init()
     size = 500, 500
     screen = pygame.display.set_mode(size)
     clock = pygame.time.Clock()
     running = True
-    if b:
+    if b and r:
         fon = pygame.transform.scale(load_image('victory.png'), (500, 500))
     else:
         fon = pygame.transform.scale(load_image('game_over.png'), (500, 500))
@@ -352,6 +352,7 @@ def ti(b):
         fon.blit(string_rendered,intro_rect)
         clock.tick(8)
         pygame.display.flip()
+    pygame.quit()
 
 
 
@@ -478,6 +479,9 @@ def ninja():
         all_sprites.draw(screen)
         person_group.draw(screen)
         pygame.display.flip()
+    pygame.quit()
+    pygame.init()
+    screen = pygame.display.set_mode(size)
     running = True
     z = ['bomb.png', 'apple.png', 'apple.png', 'apple.png', 'mango.png', 'mango.png', 'banana.png', 'banana.png',
          'coconut.png',
@@ -526,8 +530,11 @@ def ninja():
         for i in range(lifes):
             pygame.draw.ellipse(screen, (255, 0, 0), (x, 10, 50, 50), 0)
             x += 75
-        if lifes <= 0 or t >= 3000:
-            ti(s)
+        if lifes <= 0:
+            ti(s, False)
+            running = False
+        elif t >= 3000:
+            ti(s, True)
             running = False
         pygame.display.flip()
         clock.tick(100)
@@ -705,8 +712,7 @@ class Exa(QWidget):
             self.label1.setText(ninlvl)
             self.label1.setFont(QtGui.QFont("Gabriola", 36, QtGui.QFont.Bold))
             self.label1.adjustSize()
-            self.button_1.hide()
-            self.button_2.hide()
+
             ninja()
 
     def run2(self):
@@ -718,13 +724,11 @@ class Exa(QWidget):
             self.label2.setText(lablvl)
             self.label2.setFont(QtGui.QFont("Gabriola", 36, QtGui.QFont.Bold))
             self.label2.adjustSize()
-            self.button_2.hide()
-            self.button_1.hide()
+
             self.open_second_form()
 
 
     def open_second_form(self):
-
         pygame.init()
         pygame.key.set_repeat(200, 70)
 
