@@ -147,13 +147,13 @@ def over_game():
     clock = pygame.time.Clock()
     running = True
     font = pygame.font.Font(None, 30)
-    text_coord = 800
+    text_coord = 400
     string_rendered = font.render(str('Вы набрали ' + str(st) + ' баллов'), 1, pygame.Color('white'))
     intro_rect = string_rendered.get_rect()
     intro_rect = string_rendered.get_rect()
     intro_rect.top = text_coord
     intro_rect.x = 25
-    fon = pygame.transform.scale(load_image('gut.png'), (900, 800))
+    fon = pygame.transform.scale(load_image('game_over.png'), (900, 800))
     while running:
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
@@ -183,7 +183,7 @@ def win_game():
     running = True
     fon = pygame.transform.scale(load_image('win.png'), (900, 800))
     font = pygame.font.Font(None, 30)
-    text_coord = 400
+    text_coord = 600
     string_rendered = font.render(str('Вы набрали ' + str(st) + ' баллов'), 1, pygame.Color('white'))
     intro_rect = string_rendered.get_rect()
     intro_rect = string_rendered.get_rect()
@@ -752,7 +752,7 @@ class Exa(QWidget):
         player, level_x, level_y = generate_level(load_level(random.choice(o)))
         camera = Camera((level_x, level_y))
         dragon = Heroes(load_image("enemy3.png"), load_image("enemy3.png"), 5, 2, 50, 50)
-        dragon1 = Heroes(load_image("enemy3.png"), load_image("enemy3.png"), 5, 2, 300, 50)
+        dragon1 = Heroes(load_image("enemy3.png"), load_image("enemy3.png"), 5, 2, 350, 50)
         running = True
         while running:
             for event in pygame.event.get():
