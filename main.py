@@ -741,7 +741,7 @@ class Exa(QWidget):
         pygame.init()
         pygame.key.set_repeat(200, 70)
 
-        FPS = 50
+        FPS = 49
         WIDTH = 900
         HEIGHT = 900
         STEP = 10
