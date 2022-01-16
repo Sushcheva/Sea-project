@@ -4,7 +4,6 @@ import pygame
 import random
 import os
 from random import sample, randrange, choice
-import sqlite3
 from PyQt5.QtWidgets import QMainWindow,  QMessageBox, QPushButton, QApplication, QWidget, QInputDialog, QLabel
 from PyQt5 import QtGui
 from PyQt5.QtGui import QPixmap, QBrush, QPalette, QMovie, QPainter
@@ -24,24 +23,8 @@ strix_group = pygame.sprite.Group()
 player = None
 screen_rect = (0, 0, 500, 500)
 
-
-def over_game():
-    pygame.init()
-    size1 = 1000, 1000
-    screen1 = pygame.display.set_mode(size1)
-    clock1 = pygame.time.Clock()
-    fon1 = pygame.transform.scale(load_image('game over.png'), (500, 500))
-    exit(screen)
-    quit(screen1)
-    running = True
-    while running:
-        for event in pygame.event.get():
-            if event.type == pygame.QUIT:
-                running = False
-            elif event.type == pygame.KEYDOWN:
-                if event.type == pygame.K_ESCAPE:
-                     terminate()
-
+st = 0
+d = ['en.png', 'enn.png', 'ennn.png']
 
 
 def load_level(filename):
@@ -162,39 +145,55 @@ def over_game():
     screen = pygame.display.set_mode(size)
     clock = pygame.time.Clock()
     running = True
+    font = pygame.font.Font(None, 30)
+    text_coord = 400
+    string_rendered = font.render(str('Вы набрали ' + str(st) + ' баллов'), 1, pygame.Color('white'))
+    intro_rect = string_rendered.get_rect()
+    intro_rect = string_rendered.get_rect()
+    intro_rect.top = text_coord
+    intro_rect.x = 25
     fon = pygame.transform.scale(load_image('game over.png'), (900, 800))
     while running:
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 running = False
-                terminate()
             if event.type == pygame.MOUSEBUTTONDOWN:
-                pass
+                terminate()
         screen.blit(fon, (0, 0))
         clock.tick(8)
         pygame.display.flip()
+        fon.blit(string_rendered,intro_rect)
+
 
 def win_game():
     pygame.init()
     size = 900, 800
     screen = pygame.display.set_mode(size)
     clock = pygame.time.Clock()
+    con = sqlite3.connect("base55.db")
+    cur = con.cursor()
+    info = cur.execute(f"SELECT stars FROM person WHERE name =='{n} AND age == '{a}'")
+    if info.fetchone() is None:
+        f"INSERT INTO person(stars)"
+        f" VALUES('{st}')"
+    else:
+        cur.execute(f'UPDATE person SET stars=? WHERE name=? AND age=?', (st, n, a))
+    con.commit()
     running = True
     fon = pygame.transform.scale(load_image('win.png'), (900, 800))
     font = pygame.font.Font(None, 30)
-    text_coord = 300
-    string_rendered = font.render(str('Вы набрали '+str(st)+' баллов'), 1, pygame.Color('white'))
+    text_coord = 400
+    string_rendered = font.render(str('Вы набрали ' + str(st) + ' баллов'), 1, pygame.Color('white'))
     intro_rect = string_rendered.get_rect()
     intro_rect = string_rendered.get_rect()
     intro_rect.top = text_coord
-    intro_rect.x = 910
+    intro_rect.x = 600
     while running:
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 running = False
-                terminate()
             if event.type == pygame.MOUSEBUTTONDOWN:
-                pass
+                terminate()
         screen.blit(fon, (0, 0))
         fon.blit(string_rendered, intro_rect)
         clock.tick(8)
@@ -234,8 +233,6 @@ def load_image(name, colorkey=None):
     image = pygame.image.load(fullname)
     return image
 
-st = 0
-d = ['en.png', 'enn.png', 'ennn.png']
 
 
 tile_width = tile_height = 50
