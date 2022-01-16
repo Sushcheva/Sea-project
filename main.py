@@ -222,6 +222,8 @@ class AnimatedSprite(pygame.sprite.Sprite):
     def update(self):
         self.cur_frame = (self.cur_frame + 1) % len(self.frames)
         self.image = self.frames[self.cur_frame]
+        if not pygame.sprite.collide_mask(self, mountain):
+            self.rect = self.rect.move(0, 1)
 
 
 def load_image(name, colorkey=None):
@@ -642,13 +644,14 @@ class Example(QMainWindow):
             con = sqlite3.connect('base55.db')
             cur = con.cursor()
             print(cur)
-            rez = cur.execute(f'SELECT * FROM person WHERE name=? AND age=? AND state=?', (n, a, s))
+            rez = cur.execute(f'SELECT * FROM person WHERE name=? AND age=? AND state=?', (n, a, s)).fetchall()
             con.commit()
             print(rez)
-            if rez.fetchone() is None:
+            if rez is None:
                 cur.execute(f'INSERT INTO person(name, age, state) VALUES(?, ?, ?)', (n, a, s))
             else:
-                d = f'Ага, вы тот самый {n}, ваш прошлый результат был равен, мы уверены,вы сможете его улучшить!'
+                n1, n2, n3, n4 = rez[0]
+                d = f'Ага, вы тот самый {n}, ваш прошлый результат был равен {n4}, мы уверены,вы сможете его улучшить!'
                 QMessageBox.about(self, 'АГА', d)
             con.commit()
 
