@@ -171,7 +171,7 @@ def win_game():
     size = 900, 800
     screen = pygame.display.set_mode(size)
     clock = pygame.time.Clock()
-    con = sqlite3.connect("base55.db")
+    con = sqlite3.connect("base.db")
     cur = con.cursor()
     info = cur.execute(f"SELECT stars FROM person WHERE name ==? AND age == ?", (n, a))
     if info.fetchone() is None:
@@ -222,8 +222,6 @@ class AnimatedSprite(pygame.sprite.Sprite):
     def update(self):
         self.cur_frame = (self.cur_frame + 1) % len(self.frames)
         self.image = self.frames[self.cur_frame]
-        if not pygame.sprite.collide_mask(self, mountain):
-            self.rect = self.rect.move(0, 1)
 
 
 def load_image(name, colorkey=None):
@@ -646,13 +644,13 @@ class Example(QMainWindow):
             s = state
             print(s)
             print(sp)
-            con = sqlite3.connect('base55.db')
+            con = sqlite3.connect('base.db')
             cur = con.cursor()
             print(cur)
             rez = cur.execute(f'SELECT * FROM person WHERE name=? AND age=? AND state=?', (n, a, s)).fetchall()
             con.commit()
             print(rez)
-            if rez is None:
+            if len(rez) == 0:
                 cur.execute(f'INSERT INTO person(name, age, state) VALUES(?, ?, ?)', (n, a, s))
             else:
                 n1, n2, n3, n4 = rez[0]
@@ -741,7 +739,7 @@ class Exa(QWidget):
         pygame.init()
         pygame.key.set_repeat(200, 70)
 
-        FPS = 49
+        FPS = 50
         WIDTH = 900
         HEIGHT = 900
         STEP = 10
@@ -838,3 +836,4 @@ if __name__ == '__main__':
     palette.setBrush(QPalette.Background, QBrush(QPixmap("./fondb.png")))
     ex.setPalette(palette)
     sys.exit(app.exec())
+
