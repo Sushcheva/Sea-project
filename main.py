@@ -357,8 +357,6 @@ def ti(b):
         fon.blit(string_rendered,intro_rect)
         clock.tick(8)
         pygame.display.flip()
-    pygame.quit()
-    sys.exit()
 
 
 
@@ -642,7 +640,7 @@ class Example(QMainWindow):
             s = state
             print(s)
             print(sp)
-            con = sqlite3.connect('base.db')
+            con = sqlite3.connect('5base5.db')
             cur = con.cursor()
             print(cur)
             rez = cur.execute(f'SELECT * FROM person WHERE name=? AND age=? AND state=?', (n, a, s))
