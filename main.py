@@ -1,8 +1,8 @@
 import sys
+import os
 import sqlite3
 import pygame
 import random
-import os
 from random import sample, randrange, choice
 from PyQt5.QtWidgets import QMainWindow, QMessageBox, QPushButton, QApplication, QWidget, QInputDialog, QLabel
 from PyQt5 import QtGui
