@@ -147,13 +147,13 @@ def over_game():
     clock = pygame.time.Clock()
     running = True
     font = pygame.font.Font(None, 30)
-    text_coord = 400
+    text_coord = 800
     string_rendered = font.render(str('Вы набрали ' + str(st) + ' баллов'), 1, pygame.Color('white'))
     intro_rect = string_rendered.get_rect()
     intro_rect = string_rendered.get_rect()
     intro_rect.top = text_coord
     intro_rect.x = 25
-    fon = pygame.transform.scale(load_image('game over.png'), (900, 800))
+    fon = pygame.transform.scale(load_image('gut.png'), (900, 800))
     while running:
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
