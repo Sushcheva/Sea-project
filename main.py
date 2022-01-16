@@ -640,7 +640,7 @@ class Example(QMainWindow):
             s = state
             print(s)
             print(sp)
-            con = sqlite3.connect('5base5.db')
+            con = sqlite3.connect('base.db')
             cur = con.cursor()
             print(cur)
             rez = cur.execute(f'SELECT * FROM person WHERE name=? AND age=? AND state=?', (n, a, s))
