@@ -538,6 +538,7 @@ def ninja():
             running = False
         pygame.display.flip()
         clock.tick(100)
+    pygame.quit()
 
 
 sp = []
@@ -716,6 +717,7 @@ class Exa(QWidget):
             self.label1.adjustSize()
 
             ninja()
+            self.hide()
 
     def run2(self):
         lablvl, ok_pressed = QInputDialog.getItem(
@@ -813,7 +815,7 @@ class Exa(QWidget):
 
             pygame.display.flip()
             clock.tick(FPS)
-
+        self.hide()
         terminate()
 
 
