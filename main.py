@@ -355,6 +355,7 @@ def ti(b, r=False):
         clock.tick(8)
         pygame.display.flip()
     pygame.quit()
+    sys.exit()
 
 
 class Strix(pygame.sprite.Sprite):
@@ -480,6 +481,7 @@ def ninja():
         person_group.draw(screen)
         pygame.display.flip()
     pygame.quit()
+
     pygame.init()
     screen = pygame.display.set_mode(size)
     running = True
