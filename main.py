@@ -341,6 +341,15 @@ def ti(b, r=False):
         fon = pygame.transform.scale(load_image('game_over.png'), (500, 500))
     font = pygame.font.Font(None, 30)
     text_coord = 400
+    con = sqlite3.connect("base.db")
+    cur = con.cursor()
+    info = cur.execute(f"SELECT fruit FROM person WHERE name ==? AND age == ?", (n, a))
+    if info.fetchone() is None:
+        f"INSERT INTO person(fruit)"
+        f" VALUES('{b}')"
+    else:
+        cur.execute(f'UPDATE person SET fruit=? WHERE name=? AND age=?', (b, n, a))
+    con.commit()
     string_rendered = font.render(str('Вы набрали ' + str(b) + ' баллов'), 1, pygame.Color('white'))
     intro_rect = string_rendered.get_rect()
     intro_rect = string_rendered.get_rect()
@@ -655,9 +664,23 @@ class Example(QMainWindow):
             if len(rez) == 0:
                 cur.execute(f'INSERT INTO person(name, age, state) VALUES(?, ?, ?)', (n, a, s))
             else:
-                n1, n2, n3, n4 = rez[0]
-                d = f'Ага, вы тот самый {n}, ваш прошлый результат был равен {n4}, мы уверены,вы сможете его улучшить!'
-                QMessageBox.about(self, 'АГА', d)
+                n1, n2, n3, n4, n5 = rez[0]
+                if n4 == None:
+                    d = f'Ага, вы тот самый {n}, в прошлый раз вы приготовили салат из {n5} фруктов, ' \
+                        f'мы уверены,вы сможете улучшить результат!'
+                    QMessageBox.about(self, 'АГА', d)
+                if n5 == None:
+                    d1 = f'Ага, вы тот самый {n}, в прошлый раз вы собрали {n4} звёзд, ' \
+                        f'мы уверены,вы сможете улучшить результат!'
+                    QMessageBox.about(self, 'АГА', d1)
+                if n4 != None and n5 != None:
+                    d2 = f'Ага, вы тот самый {n}, в прошлый раз вы собрали {n4} звёзд, ' \
+                         f'и приготовили салат из {n5} фруктов,мы уверены,вы сможете улучшить результат!'
+                    QMessageBox.about(self, 'АГА', d2)
+                else:
+                    d3 = f'Ага, вы тот самый {n}, в прошлый раз вы собрали 0 звёзд, ' \
+                         f'и приготовили салат из 0 фруктов,мы уверены,вы сможете улучшить результат!'
+                    QMessageBox.about(self, 'АГА', d3)
             con.commit()
 
     def open_sev_form(self):
