@@ -336,7 +336,7 @@ def ti(b, r=False):
     clock = pygame.time.Clock()
     running = True
     if b and r:
-        fon = pygame.transform.scale(load_image('victory.png'), (500, 500))
+        fon = pygame.transform.scale(load_image('цшт.png'), (500, 500))
     else:
         fon = pygame.transform.scale(load_image('game_over.png'), (500, 500))
     font = pygame.font.Font(None, 30)
@@ -677,7 +677,7 @@ class Example(QMainWindow):
                     d2 = f'Ага, вы тот самый {n}, в прошлый раз вы собрали {n4} звёзд, ' \
                          f'и приготовили салат из {n5} фруктов,мы уверены,вы сможете улучшить результат!'
                     QMessageBox.about(self, 'АГА', d2)
-                else:
+                if n4 == None and n5 == None:
                     d3 = f'Ага, вы тот самый {n}, в прошлый раз вы собрали 0 звёзд, ' \
                          f'и приготовили салат из 0 фруктов,мы уверены,вы сможете улучшить результат!'
                     QMessageBox.about(self, 'АГА', d3)
